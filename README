@@ -3,4 +3,5 @@ Browser-based EDH (Commander) scoreboard written with JS and Bootstrap (http://g
 TODO:
 - Add "Remove Player" button
 - Add "Reset Life Totals" button
+- Add "+?" and "-?" buttons which prompt for the amount to add
 - Test in Tablet (iPad + Android)
