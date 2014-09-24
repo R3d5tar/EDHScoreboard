@@ -3,7 +3,5 @@ Browser-based EDH (Commander) scoreboard written with JS and Bootstrap (http://g
 TODO:
 - Add "Remove Player" button
 - Add "Reset Life Totals" button
-- Add "+?" and "-?" buttons which prompt for the amount to add
 - Add "Show/Hide Poison Damage" button
 - Add "Show/Hide Commander Damage" button
-- Test in Tablet (iPad + Android)
