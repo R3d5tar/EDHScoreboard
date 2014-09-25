@@ -1,7 +1,8 @@
 Browser-based EDH (Commander) scoreboard written with JS and Bootstrap (http://getbootstrap.com/). Works entirely offline on any modern browser.
 
-TODO:
+Pending improvements:
 - Add "Remove Player" button
 - Add "Reset Life Totals" button
 - Add "Show/Hide Poison Damage" button
 - Add "Show/Hide Commander Damage" button
+- Use HTML5 Web Storage to remember last state
