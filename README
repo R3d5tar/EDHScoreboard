@@ -6,3 +6,9 @@ Pending improvements:
 - Add "Show/Hide Poison Damage" button
 - Add "Show/Hide Commander Damage" button
 - Use HTML5 Web Storage to remember last state
+
+Ideas from reddit, under consideration:
+- Add +/- poison for all players
+- Add an "icon" for the commander, maybe based on their color identity?
+- Add Mana Counters
+- Add Turn Counters
