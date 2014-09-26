@@ -1,14 +1,12 @@
 Browser-based EDH (Commander) scoreboard written with JS and Bootstrap (http://getbootstrap.com/). Works entirely offline on any modern browser.
 
 Pending improvements:
-- Add "Remove Player" button
-- Add "Reset Life Totals" button
 - Add "Show/Hide Poison Damage" button
 - Add "Show/Hide Commander Damage" button
 - Use HTML5 Web Storage to remember last state
 
 Ideas from reddit, under consideration:
-- Add +/- poison for all players
-- Add an "icon" for the commander, maybe based on their color identity?
+- Add an "icon" for the commander, maybe their image or something based on their color identity?
 - Add Mana Counters
 - Add Turn Counters
+- Add a configuration for maximum poison counters (for playgroups that prefer to use 15 or 20)
