@@ -3,7 +3,6 @@ Browser-based EDH (Commander) scoreboard written with JS and Bootstrap (http://g
 Pending improvements:
 - Add "Show/Hide Poison Damage" button
 - Add "Show/Hide Commander Damage" button
-- Use HTML5 Web Storage to remember last state
 - Add Footer with Copyright and Contact Info
 
 Ideas from reddit, under consideration:
