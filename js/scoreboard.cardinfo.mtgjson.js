@@ -26,6 +26,8 @@ scoreboard.cardinfo = {
 		$.ajax({
 			url: scoreboard.cardinfo._databaseUrl,
 			dataType: 'jsonp',
+			jsonpCallback: 'mtgjsoncallback',
+			cache: true
 		});
 	},
 	
