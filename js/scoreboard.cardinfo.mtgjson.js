@@ -29,7 +29,7 @@ scoreboard.cardinfo = {
 		});
 	},
 	
-	_initCallback: function(data)
+	_loadCallback: function(data)
 	{
 		for(var cardName in data)
 		{
@@ -67,5 +67,5 @@ scoreboard.cardinfo = {
 // Fixed callback required by mtgjson
 function mtgjsoncallback(data, name)
 {
-	scoreboard.cardinfo._initCallback(data);
+	scoreboard.cardinfo._loadCallback(data);
 }
