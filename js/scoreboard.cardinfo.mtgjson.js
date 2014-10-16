@@ -35,7 +35,11 @@ scoreboard.cardinfo = {
 	{
 		for(var cardName in data)
 		{
-			if(data[cardName].type.indexOf('Legendary')>=0 && data[cardName].type.indexOf('Creature')>=0 && typeof(data[cardName].manaCost)!='undefined')
+			var isLegendaryCreature = typeof(data[cardName].type)!='undefined' && data[cardName].type.indexOf('Legendary')>=0 && data[cardName].type.indexOf('Creature')>=0;
+			var isSpecialCommander = typeof(data[cardName].text)!='undefined' && data[cardName].text.indexOf('can be your commander')>=0;
+			var hasManaCost = typeof(data[cardName].manaCost)!='undefined'; // Removes Flip/Double-Faced cards that are only legendary on the alternate side
+		
+			if((isLegendaryCreature || isSpecialCommander) && hasManaCost)
 			{
 				var imageUrl = this._imageUrl.replace('{imageName}',escape(data[cardName].imageName));
 				var cardImageUrl = this._cardImageUrl.replace('{imageName}',escape(data[cardName].imageName));
