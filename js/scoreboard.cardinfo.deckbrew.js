@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2014 Filipe Badaro
+* Copyright (c) 2014-2015 Filipe Badaro
 * License: https://github.com/Badaro/EDHScoreboard/blob/master/LICENSE
 */
 
