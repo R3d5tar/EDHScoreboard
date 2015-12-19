@@ -20,6 +20,12 @@ scoreboard.renderer = {
 		{
 			this.createRemovePlayerButton(playerKeys[i]);
 		}
+        
+        var commanderKeys = scoreboard.datastore.getCommanderKeys();
+		for(var i=0;i<commanderKeys.length;i++)
+		{
+			this.createRemoveCommanderButton(commanderKeys[i]);
+		}
 		this.redraw();
 	},
 	
@@ -326,18 +332,36 @@ scoreboard.renderer = {
 	 
 	createRemovePlayerButton: function(playerKey)
 	{
-		$('#managePlayersContainer').append('<button>');
+		$('#managePlayersContainer').append('<button />');
 		$('#managePlayersContainer button:last')	
 			.attr('id', 'removePlayer_' + playerKey)
 			.addClass('btn')
 			.addClass('btn-default')
-			.html('Remove ' + scoreboard.datastore.getPlayerName(playerKey))
+            .append('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>')
+			.append(' Remove ' + scoreboard.datastore.getPlayerName(playerKey))
 			.click(function() { scoreboard.functions.removePlayer(playerKey); });
 	},
-	 
-	destroyRemovePlayerButton: function(playerKey)
+    
+    destroyRemovePlayerButton: function(playerKey)
 	{
 		$('#removePlayer_' + playerKey).remove();
+	},
+    
+    createRemoveCommanderButton: function(commanderKey)
+	{
+		$('#manageCommandersContainer').append('<button />');
+		$('#manageCommandersContainer button:last')	
+			.attr('id', 'removeCommander_' + commanderKey)
+			.addClass('btn')
+			.addClass('btn-default')
+            .append('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>')
+			.append(' Remove ' + scoreboard.datastore.getCommanderName(commanderKey))
+			.click(function() { scoreboard.functions.removeCommander(commanderKey); });
+	},
+    
+    destroyRemoveCommanderButton: function(commanderKey)
+	{
+		$('#removeCommander_' + commanderKey).remove();
 	},
 	
 	appendToLog: function(message)
@@ -357,29 +381,85 @@ scoreboard.renderer = {
 	 
 	toggleLogDisplay: function()
 	{
-		$('textarea.logDisplay').toggle();
+        var log = $('textarea.logDisplay');
+		log.toggleClass('hidden');
+        return !log.hasClass('hidden');
  	},
-	 
-	getFormData: function()
+	
+    getCommanderFormData: function() {
+		var commanderName = $('#inputCommander').val();
+		var commanderInfect = $('#inputInfect').is(':checked');
+		return ({
+             commanderName: commanderName, 
+             commanderInfect: commanderInfect
+        });
+    },
+    
+    getPlayerFormData: function() {
+		var playerName = $('#inputPlayer').val();
+		return ({
+             playerName: playerName
+        });
+    },
+    
+	getAllFormData: function()
 	{
  		var playerName = $('#inputPlayer').val();
 		var commanderName = $('#inputCommander').val();
 		var commanderInfect = $('#inputInfect').is(':checked');
 		
-		return({playerName: playerName, commanderName: commanderName, commanderInfect: commanderInfect});
+		return ({
+             playerName: playerName, 
+             commanderName: commanderName, 
+             commanderInfect: commanderInfect
+        });
 	},
-	 
-	resetFormData: function()
+	
+    
+    resetPlayerFormData: function()
 	{
 		$('#inputPlayer').val('');
-		$('#inputCommander').val('');
-		if($('#inputInfect').is(':checked')) $('#inputInfect').bootstrapSwitch('toggleState', false);
 		$('#inputPlayer').focus();
 	},
-	 
-	showFormError: function()
+    
+    resetCommanderFormData: function()
 	{
-		$('#exitingUserError').show().delay(2500).fadeOut();
-	}
+		$('#inputCommander').val('');
+		if($('#inputInfect').is(':checked')) { 
+            $('#inputInfect').bootstrapSwitch('toggleState', false);
+        }
+		$('#inputCommander').focus();
+	},
+    
+	resetAllFormData: function()
+	{
+        this.resetCommanderFormData();
+        this.resetCommanderFormData();
+	},
+	 
+	showExistingPlayerFormError: function()
+	{
+		$('#existingPlayerError').removeClass('hidden');
+        setTimeout(function () {
+            $('#existingPlayerError').addClass('hidden');
+        }, 2500);
+	},
+    
+    showExistingCommanderFormError: function ()
+    {
+        $('#existingCommanderError').removeClass('hidden');
+        setTimeout(function () {
+            $('#existingCommanderError').addClass('hidden');
+        }, 2500);
+    },
+    showGeneralError: function (message)
+    {
+        $('#generalError .message').html(message);
+        $('#generalError').removeClass('hidden');
+        setTimeout(function () {
+            $('#generalError').addClass('hidden');
+        }, 2500);
+    }
+    
 };
 

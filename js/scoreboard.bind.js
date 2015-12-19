@@ -14,14 +14,29 @@ $(document).ready()
 	scoreboard.functions.init();
 	scoreboard.cardinfo.init();
 
-	$('#addButton').click(function()
+	$('#addPlayerButton').click(function()
 	{
 		scoreboard.functions.addPlayer();
+	});
+    
+    $('#addCommanderButton').click(function()
+	{
+		scoreboard.functions.addCommander();
+	});
+    
+    $('#addPlayerWithCommanderButton').click(function()
+	{
+		scoreboard.functions.addPlayerWithCommander();
 	});
 	
 	$('#showHideLogButton').click(function()
 	{
-		scoreboard.functions.toggleLogDisplay();
+		var shown = scoreboard.functions.toggleLogDisplay();
+        if (shown) {
+            $('#showHideLogButton').html("Hide");
+        } else {
+            $('#showHideLogButton').html("Show");
+        }
 	});
 	
 	$('#newGameButton').click(function()

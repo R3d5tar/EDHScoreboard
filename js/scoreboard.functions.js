@@ -13,36 +13,90 @@ scoreboard.functions = {
 	{
 	},
 	
-	addPlayer: function()
+    //currently not in use
+	addPlayerWithCommander: function()
 	{
-		var formData = scoreboard.renderer.getFormData();
+		var formData = scoreboard.renderer.getAllFormData();
 		console.log(formData);
 		
 		if(formData.playerName!='' && formData.commanderName!='')
 		{
-			var result = scoreboard.datastore.addPlayer(formData.playerName,formData.commanderName, formData.commanderInfect);
+			var result = scoreboard.datastore.addPlayerWithCommander(formData.playerName,formData.commanderName, formData.commanderInfect);
 			if(result.success)
 			{
-				scoreboard.renderer.resetFormData();
+				scoreboard.renderer.resetAllFormData();
+				scoreboard.renderer.createRemovePlayerButton(result.playerKey);
+                scoreboard.renderer.createRemoveCommanderButton(result.commanderKey);
+				scoreboard.renderer.appendToLog('Added player ' + formData.playerName + 'with commander ' + formData.commanderName);
+				scoreboard.renderer.redraw();
+			}
+			else
+			{
+				scoreboard.renderer.showGeneralError(result.message);
+			}
+		}
+	},
+    
+    addPlayer: function()
+	{
+		var formData = scoreboard.renderer.getPlayerFormData();
+		console.log(formData);
+		
+		if(formData.playerName != '')
+		{
+			var result = scoreboard.datastore.addPlayer(formData.playerName);
+			if(result.success)
+			{
+				scoreboard.renderer.resetPlayerFormData();
 				scoreboard.renderer.createRemovePlayerButton(result.playerKey);
 				scoreboard.renderer.appendToLog('Added player ' + formData.playerName);
 				scoreboard.renderer.redraw();
 			}
 			else
 			{
-				scoreboard.renderer.showFormError();
+				scoreboard.renderer.showExistingPlayerFormError();
 			}
 		}
 	},
+    
+    addCommander: function() {
+        var formData = scoreboard.renderer.getCommanderFormData();
+		console.log(formData);
+		
+		if(formData.commanderName != '')
+		{
+			var result = scoreboard.datastore.addCommander(formData.commanderName, formData.commanderInfect);
+			if(result.success)
+			{
+				scoreboard.renderer.resetCommanderFormData();
+				scoreboard.renderer.createRemoveCommanderButton(result.commanderKey);
+				scoreboard.renderer.appendToLog('Added commander ' + formData.commanderName);
+				scoreboard.renderer.redraw();
+			}
+			else
+			{
+				scoreboard.renderer.showExistingCommanderFormError();
+			}
+		}        
+    },
 	
 	removePlayer: function(playerKey)
 	{
 		var playerName = scoreboard.datastore.getPlayerName(playerKey);
 		scoreboard.datastore.removePlayer(playerKey);
 		scoreboard.renderer.destroyRemovePlayerButton(playerKey);
-		scoreboard.renderer.appendToLog('Removed player player ' + playerName);
+		scoreboard.renderer.appendToLog('Removed player ' + playerName);
 		scoreboard.renderer.redraw();
 	},
+
+    removeCommander: function (commanderKey)
+    {
+        var commanderName = scoreboard.datastore.getCommanderName(commanderKey);
+		scoreboard.datastore.removeCommander(commanderKey);
+		scoreboard.renderer.destroyRemoveCommanderButton(commanderKey);
+		scoreboard.renderer.appendToLog('Removed commander ' + commanderName);
+		scoreboard.renderer.redraw();
+    },
 
 	incrementDamageAll: function(amount)
 	{
@@ -148,7 +202,7 @@ scoreboard.functions = {
 	
 	toggleLogDisplay: function()
 	{
-		scoreboard.renderer.toggleLogDisplay();
+		return scoreboard.renderer.toggleLogDisplay();
 	},
 	
 	toggleImageDisplay: function()
