@@ -29,8 +29,8 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body>
-  
+  <body>    
+      
 	<div class="container-fluid">
 		<div id="titleContainer" class="row titleContainer">
 		  <h1 class="titleItem">EDH Scoreboard - <i>NOP Edition</i></h1>
@@ -130,8 +130,9 @@
                     <div class="btn-group form-group" role="group">
                         <button id="newGameButton" type="button" class="btn btn-default">
                             <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
-                            New Game
+                            Start New Game
                         </button>
+                        
                         <button id="showHideImagesButton" type="button" class="btn btn-default" data-toggle="button" autocomplete="off">
                             <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
                             Toggle Commander Images
@@ -140,9 +141,13 @@
                             <span class="glyphicon glyphicon-tower" aria-hidden="true"></span>
                             Toggle Commander Damage
                         </button>
-                        <button id="showHidePoisonButton" type="button" class="btn btn-default" data-toggle="button" autocomplete="off">
+                        <button id="showHidePoisonButton" type="button" class="btn btn-btn-defaultinfo" data-toggle="button" autocomplete="off">
                             <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
                             Toggle Poison
+                        </button>
+                        <button id="resetAllButton" type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+                            Clear All
                         </button>
                     </div>
                 </div> 

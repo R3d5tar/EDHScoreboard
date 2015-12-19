@@ -59,6 +59,15 @@ $(document).ready()
 		scoreboard.functions.togglePoisonDisplay();
 	});
 	
+    $('#resetAllButton').click(function() 
+    {
+        if(confirm("This will remove all registered players, commanders, lifetotals, etc. Are you sure to clear this data?")) 
+        {
+            scoreboard.functions.clearAll();
+        }
+    });
+    
+    
 	// bootstrap-switch initialization
 	$('#inputInfect').bootstrapSwitch();
 	$('#inputInfect').bootstrapSwitch('toggleAnimate', false);

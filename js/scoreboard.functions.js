@@ -13,7 +13,6 @@ scoreboard.functions = {
 	{
 	},
 	
-    //currently not in use
 	addPlayerWithCommander: function()
 	{
 		var formData = scoreboard.renderer.getAllFormData();
@@ -200,6 +199,12 @@ scoreboard.functions = {
 		scoreboard.renderer.redraw();
 	},
 	
+    clearAll: function()
+    {
+        scoreboard.datastore.clear();
+        scoreboard.renderer.reloadPage();
+    },
+    
 	toggleLogDisplay: function()
 	{
 		return scoreboard.renderer.toggleLogDisplay();

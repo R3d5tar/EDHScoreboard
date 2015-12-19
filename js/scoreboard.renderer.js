@@ -44,6 +44,11 @@ scoreboard.renderer = {
 		this._showCommanderDamage = !this._showCommanderDamage;
 	},
 	
+    reloadPage: function () 
+    {
+        window.location.reload();   
+    },
+    
 	redraw: function()
 	{
 		$('#mainContainer').html('');
@@ -434,7 +439,7 @@ scoreboard.renderer = {
 	resetAllFormData: function()
 	{
         this.resetCommanderFormData();
-        this.resetCommanderFormData();
+        this.resetPlayerFormData();
 	},
 	 
 	showExistingPlayerFormError: function()
