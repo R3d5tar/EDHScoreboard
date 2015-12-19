@@ -50,68 +50,140 @@
 		<div id="mainContainer" class="row">
 		</div>
 		
-		<div id="formContainer" class="row formHolder">
-			<form class="form-inline">
-			  <div class="form-group">
-				<h4>Add new player</h4>
-			  </div>
-			  <div class="form-group">
-				<div class="col-sm-10">
-				  <input id="inputPlayer" type="text" class="form-control" placeholder="Player">
-				</div>
-			  </div>
-			  <div class="form-group">
-				<div class="col-sm-10">
-				  <input id="inputCommander" type="text" class="form-control" placeholder="Commander">
-				</div>
-			  </div>
-			  <div class="form-group">
-				<div class="col-sm-10" title="Activate this when the commander has infect, for example: Skithiryx, the Blight Dragon">
-					<input id="inputInfect" type="checkbox" data-label-text="Infect" >
-				</div>
-			  </div>
-			  <div class="form-group">
-				<div class="col-sm-10">
-				  <button id="addButton" type="button" class="btn btn-default">Add</button>
-				</div>
-			  </div>
-			  <span id="exitingUserError" class="alert alert-danger exitingUserError">
-				<strong>Error!</strong> There's already a player with this name.		
-			  </span>
-			</form>
+        <div id="errorContainer" class="row">
+            <div id="generalError" class="alert alert-danger hidden" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                <span class="message"></span>		
+            </div>
+        </div>
+        
+		<div id="formContainer" class="row">
+            
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                <form class="panel panel-default">
+                    <div class="panel-heading">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        New Player/team
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="inputPlayer" class="control-label">Name</label>
+                            <input id="inputPlayer" type="text" class="form-control" placeholder="Player/team">
+                        </div>
+                        <div class="form-group">
+                            <button id="addPlayerButton" type="button" class="btn btn-primary btn-block">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+                            </button>
+                        </div>
+                        <div id="existingPlayerError" class="alert alert-danger hidden" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            There's already a player with this name.		
+                        </div>  
+                    </div> 
+                </form>
+            </div>
+            
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                <form class="panel panel-default">
+                    <div class="panel-heading">
+                        <span class="glyphicon glyphicon-tower" aria-hidden="true"></span>
+                        New Commander
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="inputCommander" class="control-label">Name</label>
+                            <input id="inputCommander" type="text" class="form-control" placeholder="Commander">
+                        </div>
+                        <div class="form-group" title="Activate this when the commander has infect, for example: Skithiryx, the Blight Dragon">
+                            <input id="inputInfect" type="checkbox" data-label-text="Infect" >
+			             </div>
+                        <div class="form-group">
+                            <button id="addCommanderButton" type="button" class="btn btn-primary btn-block">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+                            </button>
+                        </div>
+                        <div id="existingCommanderError" class="alert alert-danger hidden" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            There's already a commander with this name.		
+                        </div>
+                    </div> 
+                </form>
+            </div>
+            
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                <form class="panel panel-default">
+                    <div class="panel-heading">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        Combine
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <button id="addPlayerWithCommanderButton" type="button" class="btn btn-default btn-block">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add both player and commander
+                            </button>
+                        </div>  
+                    </div> 
+                </form>
+            </div>
+            
 		</div>
 		
-		<div id="toolsContainer" class="row formHolder">
-			<div class="form-inline">
-				<div class="form-group">
-					<h4>Tools</h4>
-			  	</div> 
-				<div class="btn-group form-group" role="group">
-					<button id="newGameButton" type="button" class="btn btn-default">
-						<span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
-						New Game
-					</button>
-					<button id="showHideImagesButton" type="button" class="btn btn-default" data-toggle="button" autocomplete="off">
-						<span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
-						Toggle Commander Images
-					</button>
-					<button id="showHideCommanderDamageButton" type="button" class="btn btn-default active" data-toggle="button" autocomplete="off">
-						<span class="glyphicon glyphicon-tower" aria-hidden="true"></span>
-						Toggle Commander Damage</button>
-					<button id="showHidePoisonButton" type="button" class="btn btn-default" data-toggle="button" autocomplete="off">
-						<span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
-						Toggle Poison
-					</button>
-				</div>
-				<div id="managePlayersContainer" class="btn-group form-group" role="group">
-				</div>
-			</div>
-		</div>
+		<div id="toolsContainer" class="row">
+            <div class="form-inline">
+                <div class="form-group">
+                    <h4>
+                        <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                        Tools
+                    </h4>
+                    <div class="btn-group form-group" role="group">
+                        <button id="newGameButton" type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                            New Game
+                        </button>
+                        <button id="showHideImagesButton" type="button" class="btn btn-default" data-toggle="button" autocomplete="off">
+                            <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                            Toggle Commander Images
+                        </button>
+                        <button id="showHideCommanderDamageButton" type="button" class="btn btn-default active" data-toggle="button" autocomplete="off">
+                            <span class="glyphicon glyphicon-tower" aria-hidden="true"></span>
+                            Toggle Commander Damage
+                        </button>
+                        <button id="showHidePoisonButton" type="button" class="btn btn-default" data-toggle="button" autocomplete="off">
+                            <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+                            Toggle Poison
+                        </button>
+                    </div>
+                </div> 
+                
+                <div class="form-group">
+                    <h4>
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        Players
+                    </h4>
+                    <div id="managePlayersContainer" class="btn-group form-group" role="group"></div>
+                </div> 
+                
+                <div class="form-group">
+                    <h4>
+                        <span class="glyphicon glyphicon-tower" aria-hidden="true"></span>
+                        Commanders
+                    </h4>
+                    <div id="manageCommandersContainer" class="btn-group form-group" role="group"></div>
+                </div> 
+            </div>
+        </div>
 		
-		<div id="logContainer" class="row formHolder">
-			<h4>Log <button id="showHideLogButton" type="button" class="btn btn-default">Show/Hide</button></h4>
-			<textarea class="logDisplay" rows="15" style="display:none"></textarea>
+		<div id="logContainer" class="row">
+            <h4>
+                Log
+                <button id="showHideLogButton" type="button" class="btn btn-default">Show</button>
+            <h4>
+            <textarea class="logDisplay hidden" rows="15"></textarea>
 		</div>
+        
 	</div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
