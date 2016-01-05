@@ -8,7 +8,7 @@
 */
 
 scoreboard.datastore = {
-	_localStorageVersion: 1,
+	_localStorageVersion: 2,
 	_localStorageKey: 'scoreboard_data',
 	_store: { 
         players: {},
@@ -18,31 +18,33 @@ scoreboard.datastore = {
 	init: function()
 	{
 		this.load();
-        this.upgrade();
 	},
 	
 	hasData: function()
 	{
-		return Object.keys(this._store).length>0;
+		return Object.keys(this._store.players).length > 0 
+            || Object.keys(this._store.commanders).length > 0;
 	},
 	
 	addPlayerWithCommander: function(playerName, commanderName, hasInfect)
 	{
         var playerResult = this.addPlayer(playerName);
-        if (!playerResult.succes)
+        if (!playerResult.success) {
             return playerResult;
+        }
             
         var commanderResult = this.addCommander(commanderName, hasInfect);
-        if (!commanderResult.succes)
+        if (!commanderResult.success) {
             return commanderResult;
-            
+        }
+        
         var newPlayer = this._store.players[playerResult.playerKey];
         newPlayer.commanderKey = commanderResult.commanderKey;
         
         return {
-          succes: true,
+          success: true,
           playerKey: playerResult.playerKey,
-          commanderKey: playerResult.commanderKey
+          commanderKey: commanderResult.commanderKey
         };
 	},
     
@@ -263,29 +265,40 @@ scoreboard.datastore = {
 		if(typeof(Storage) !== "undefined" && typeof(localStorage) !== "undefined" ) 
 		{
 			var storedObject = JSON.parse(localStorage.getItem(this._localStorageKey));
-			if(storedObject!=null && storedObject.data!=null && storedObject.version==this._localStorageVersion)
+			if(storedObject!=null && storedObject.data != null)
 			{
-				this._store = storedObject.data;
+                if (storedObject.version == this._localStorageVersion)
+                {
+				    this._store = storedObject.data;
+                }
+                else 
+                {
+                    this._store = this.upgrade(storedObject);
+                    this.save();
+                }
 			}
 		}
 	},
     
-    upgrade: function() {
-        if (this.hasData())
-        {
-            if (this._store == null || this._store.players == null || this._store.commanders == null)
+    clear: function() 
+    {
+        this._store = null;
+        this.save();
+    },
+    
+    upgrade: function(storedObject) {
+        var data = storedObject.data;
+        if (storedObject.version < 2) 
+        {    
+            var upgradedData = { players: {}, commanders: {}};
+            for(var playerKey in data)
             {
-                var newStore = { players: {}, commanders: {}};
-                var oldStore = this._store;
-                for(var playerKey in oldStore)
-                {
-                    var playerObject = oldStore[playerKey];
-                    newStore.players[playerKey] = playerObject;
-                    newStore.commanders[playerObject.commanderKey] = playerObject;
-                }
-                this._store = newStore;
-                this.save();
+                var playerObject = data[playerKey];
+                upgradedData.players[playerKey] = playerObject;
+                upgradedData.commanders[playerObject.commanderKey] = playerObject;
             }
+            data = upgradedData;
         }
+        return data;
     }
 }
