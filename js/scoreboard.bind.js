@@ -17,16 +17,19 @@ $(document).ready()
 	$('#addPlayerButton').click(function()
 	{
 		scoreboard.functions.addPlayer();
+        return false;
 	});
     
     $('#addCommanderButton').click(function()
 	{
 		scoreboard.functions.addCommander();
+        return false;
 	});
     
     $('#addPlayerWithCommanderButton').click(function()
 	{
 		scoreboard.functions.addPlayerWithCommander();
+        return false;
 	});
 	
 	$('#showHideLogButton').click(function()
