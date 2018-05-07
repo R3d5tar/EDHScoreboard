@@ -15,9 +15,7 @@ scoreboard.functions = {
 	
 	addPlayerWithCommander: function()
 	{
-		var formData = scoreboard.renderer.getAllFormData();
-		console.log(formData);
-		
+		var formData = scoreboard.renderer.getAllFormData();		
 		if(formData.playerName!='' && formData.commanderName!='')
 		{
 			var result = scoreboard.datastore.addPlayerWithCommander(formData.playerName,formData.commanderName, formData.commanderInfect);
@@ -38,9 +36,7 @@ scoreboard.functions = {
     
     addPlayer: function()
 	{
-		var formData = scoreboard.renderer.getPlayerFormData();
-		console.log(formData);
-		
+		var formData = scoreboard.renderer.getPlayerFormData();		
 		if(formData.playerName != '')
 		{
 			var result = scoreboard.datastore.addPlayer(formData.playerName);
@@ -59,9 +55,7 @@ scoreboard.functions = {
 	},
     
     addCommander: function() {
-        var formData = scoreboard.renderer.getCommanderFormData();
-		console.log(formData);
-		
+        var formData = scoreboard.renderer.getCommanderFormData();		
 		if(formData.commanderName != '')
 		{
 			var result = scoreboard.datastore.addCommander(formData.commanderName, formData.commanderInfect);
