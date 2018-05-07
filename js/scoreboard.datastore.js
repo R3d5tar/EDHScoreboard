@@ -1,1 +1,304 @@
-/** Copyright (c) 2014-2015 Filipe Badaro* License: https://github.com/Badaro/EDHScoreboard/blob/master/LICENSE*/scoreboard.datastore = {	_localStorageVersion: 1,	_localStorageKey: 'scoreboard_data',	_store: {},		init: function()	{		this.load();	},		hasData: function()	{		return Object.keys(this._store).length>0;	},		addPlayer: function(playerName, commanderName, commanderInfect)	{		var playerKey = playerName.replace(/[^-A-Za-z0-9]+/g, '').toLowerCase() + new Date().getTime();		var commanderKey = commanderName.replace(/[^-A-Za-z0-9]+/g, '').toLowerCase() + new Date().getTime();		for(var existingPlayerKey in this._store)		{			if(this._store[existingPlayerKey].playerName==playerName) return( {success: false } );		}		this._store[playerKey] = {			playerName: playerName,			playerKey: playerKey,			commanderName: commanderName,			commanderKey: commanderKey,			commanderInfect: commanderInfect,			life: scoreboard.settings.startingLife,			poison: scoreboard.settings.startingPoison,			commanderDamage: {}		};				var commanderList = this.getCommanderKeys();		for(var existingPlayerKey in this._store)		{			for(var i=0;i<commanderList.length;i++)			{				if(isNaN(this._store[existingPlayerKey].commanderDamage[commanderList[i]]))				{					this._store[existingPlayerKey].commanderDamage[commanderList[i]] = scoreboard.settings.startingCommanderDamage;				}			}		}		this.save();		return({success: true, playerKey: playerKey});	},		removePlayer: function(playerKey)	{		var commanderKey = this._store[playerKey].commanderKey;		delete this._store[playerKey];			for(var existingPlayerKey in this._store)		{			delete this._store[existingPlayerKey].commanderDamage[commanderKey];		}		this.save();		return(true);	},			getPlayerKeys: function()	{		var result = [];		for(var playerKey in this._store)		{			result.push(this._store[playerKey].playerKey);		}		return(result);	},		getCommanderKeys: function()	{		var result = [];		for(var playerKey in this._store)		{			result.push(this._store[playerKey].commanderKey);		}		return(result);	},		getPlayerName: function(playerKey)	{		return this._store[playerKey].playerName;	},		getCommanderName: function(commanderKey)	{		for(var playerKey in this._store)		{			if(this._store[playerKey].commanderKey==commanderKey)			{				return this._store[playerKey].commanderName;			}		}		return(null);	},		getCommanderInfect: function(commanderKey)	{		for(var playerKey in this._store)		{			if(this._store[playerKey].commanderKey==commanderKey)			{				return this._store[playerKey].commanderInfect;			}		}		return(false);	},		getDamage: function(playerKey)	{		return this._store[playerKey].life;	},	getPoison: function(playerKey)	{		return this._store[playerKey].poison;	},	 	getCommanderDamage: function(playerKey, commanderKey)	{		return this._store[playerKey].commanderDamage[commanderKey];	},		setDamage: function(playerKey, amount)	{		var previous = this._store[playerKey].life;		this._store[playerKey].life = amount;		if(scoreboard.settings.minLife!=null && this._store[playerKey].life<scoreboard.settings.minLife) this._store[playerKey].life = scoreboard.settings.minLife;		if(scoreboard.settings.maxLife!=null && this._store[playerKey].life>scoreboard.settings.maxLife) this._store[playerKey].life = scoreboard.settings.maxLife;		this.save();		return this._store[playerKey].life - previous;	},	setPoison: function(playerKey, amount)	{		var previous = this._store[playerKey].poison;		this._store[playerKey].poison = amount;		if(scoreboard.settings.minPoison!=null && this._store[playerKey].poison<scoreboard.settings.minPoison) this._store[playerKey].poison = scoreboard.settings.minPoison;		if(scoreboard.settings.maxPoison!=null && this._store[playerKey].poison>scoreboard.settings.maxPoison) this._store[playerKey].poison = scoreboard.settings.maxPoison;		this.save();		return this._store[playerKey].poison - previous;	},	 	setCommanderDamage: function(playerKey, commanderKey, amount)	{		var previous = this._store[playerKey].commanderDamage[commanderKey];		this._store[playerKey].commanderDamage[commanderKey] = amount;		if(scoreboard.settings.minCommanderDamage!=null && this._store[playerKey].commanderDamage[commanderKey]<scoreboard.settings.minCommanderDamage) this._store[playerKey].commanderDamage[commanderKey] = scoreboard.settings.minCommanderDamage;		if(scoreboard.settings.maxCommanderDamage!=null && this._store[playerKey].commanderDamage[commanderKey]>scoreboard.settings.maxCommanderDamage) this._store[playerKey].commanderDamage[commanderKey] = scoreboard.settings.maxCommanderDamage;		this.save();		return this._store[playerKey].commanderDamage[commanderKey] - previous;	},		newGame: function()	{		for(var playerKey in this._store)		{			this._store[playerKey].life = scoreboard.settings.startingLife;			this._store[playerKey].poison = scoreboard.settings.startingPoison;						for(var commanderKey in this._store[playerKey].commanderDamage)			{				this._store[playerKey].commanderDamage[commanderKey] = scoreboard.settings.startingCommanderDamage;			}		}		this.save();	},		save: function()	{		if(typeof(Storage) !== "undefined" && typeof(localStorage) !== "undefined" ) 		{			localStorage.setItem(this._localStorageKey, JSON.stringify({ version: this._localStorageVersion, data: this._store }));		}	},		load: function()	{		if(typeof(Storage) !== "undefined" && typeof(localStorage) !== "undefined" ) 		{			var storedObject = JSON.parse(localStorage.getItem(this._localStorageKey));			if(storedObject!=null && storedObject.data!=null && storedObject.version==this._localStorageVersion)			{				this._store = storedObject.data;			}		}	}}
+/*
+* 	Copyright (c) 2015 R3d5tar
+*	License: https://github.com/R3d5tar/EDHScoreboard/blob/master/LICENSE
+*	
+*	Based on:
+*		Copyright (c) 2014-2015 Filipe Badaro
+*		License: https://github.com/Badaro/EDHScoreboard/blob/master/LICENSE
+*/
+
+scoreboard.datastore = {
+	_localStorageVersion: 2,
+	_localStorageKey: 'scoreboard_data',
+	_store: { 
+        players: {},
+        commanders: {}
+    },
+	
+	init: function()
+	{
+		this.load();
+	},
+	
+	hasData: function()
+	{
+		return Object.keys(this._store.players).length > 0 
+            || Object.keys(this._store.commanders).length > 0;
+	},
+	
+	addPlayerWithCommander: function(playerName, commanderName, hasInfect)
+	{
+        var playerResult = this.addPlayer(playerName);
+        if (!playerResult.success) {
+            return playerResult;
+        }
+            
+        var commanderResult = this.addCommander(commanderName, hasInfect);
+        if (!commanderResult.success) {
+            return commanderResult;
+        }
+        
+        var newPlayer = this._store.players[playerResult.playerKey];
+        newPlayer.commanderKey = commanderResult.commanderKey;
+        
+        return {
+          success: true,
+          playerKey: playerResult.playerKey,
+          commanderKey: commanderResult.commanderKey
+        };
+	},
+    
+    addCommander: function (commanderName, hasInfect) 
+    {
+		var commanderKey = commanderName.replace(/[^-A-Za-z0-9]+/g, '').toLowerCase() + new Date().getTime();
+
+		for(var existingCommanderKey in this._store.commanders)
+		{
+			if(this._store.commanders[existingCommanderKey].commanderName == commanderName) 
+                return( {success: false, message: "Commander '" + commanderName + "' already exists", commanderKey: null } );
+		}
+
+        var commander = {
+            commanderName: commanderName,
+            commanderKey: commanderKey,
+            commanderInfect: hasInfect
+        }
+        this._store.commanders[commanderKey] = commander;
+        
+        //ensure base commander damage for all players
+		for(var existingPlayerKey in this._store.players)
+		{
+            var player = this._store.players[existingPlayerKey];
+            if(isNaN(player.commanderDamage[commanderKey]))
+            {
+                player.commanderDamage[commanderKey] = scoreboard.settings.startingCommanderDamage;
+            }
+		}
+
+		this.save();
+		return({success: true, commanderKey: commanderKey});
+        
+    },
+    
+    addPlayer: function(playerName)
+	{
+		var playerKey = playerName.replace(/[^-A-Za-z0-9]+/g, '').toLowerCase() + new Date().getTime();
+        
+        //check for duplicates
+		for(var existingPlayerKey in this._store.players)
+		{
+			if(this._store.players[existingPlayerKey].playerName == playerName) 
+                return ( {success: false, message: "Player '" + playerName + "' already exists", playerKey: null } );
+		}
+        
+        var player = {
+			playerName: playerName,
+			playerKey: playerKey,
+            commanderKey: null,
+			life: scoreboard.settings.startingLife,
+			poison: scoreboard.settings.startingPoison,
+			commanderDamage: {}
+		};
+        this._store.players[playerKey] = player;
+        
+        //ensure starting commander damage for the new player
+        for(var commanderKey in this._store.commanders)
+        {
+            if(isNaN(player.commanderDamage[commanderKey]))
+            {
+                player.commanderDamage[commanderKey] = scoreboard.settings.startingCommanderDamage;
+            }
+        }
+
+		this.save();
+		return ({success: true, playerKey: playerKey});
+	},
+	
+	removePlayer: function(playerKey)
+	{
+		var commanderKey = this._store.players[playerKey].commanderKey;
+		delete this._store.players[playerKey];
+	
+        if (commanderKey != null) {
+            this.removeCommander(commanderKey);
+        }
+        
+		this.save();
+		return true;
+	},
+    
+    removeCommander: function(commanderKey)
+	{
+        //clean up commander damage, and commander reference
+        for(var playerKey in this._store.players)
+        {
+            var player = this._store.players[playerKey];
+            delete player.commanderDamage[commanderKey];
+            if (player.commanderKey == commanderKey) {
+                player.commanderKey = null;
+            }
+        }
+        delete this._store.commanders[commanderKey];
+        
+		this.save();
+		return true;
+	},
+		
+	getPlayerKeys: function()
+	{
+		var result = [];
+		for(var playerKey in this._store.players)
+		{
+			result.push(this._store.players[playerKey].playerKey);
+		}
+		return result;
+	},
+	
+	getCommanderKeys: function()
+	{
+		var result = [];
+		for(var commanderKey in this._store.commanders)
+		{
+             result.push(this._store.commanders[commanderKey].commanderKey);
+		}
+		return result;
+	},
+	
+	getPlayerName: function(playerKey)
+	{
+		return this._store.players[playerKey].playerName;
+	},
+	
+	getCommanderName: function(commanderKey)
+	{
+        return this._store.commanders[commanderKey].commanderName;
+	},
+	
+	getCommanderInfect: function(commanderKey)
+	{
+        return this._store.commanders[commanderKey].commanderInfect;
+	},
+	
+	getDamage: function(playerKey)
+	{
+		return this._store.players[playerKey].life;
+	},
+
+	getPoison: function(playerKey)
+	{
+		return this._store.players[playerKey].poison;
+	},
+	 
+	getCommanderDamage: function(playerKey, commanderKey)
+	{
+		return this._store.players[playerKey].commanderDamage[commanderKey];
+	},
+	
+	setDamage: function(playerKey, amount)
+	{
+        var player = this._store.players[playerKey];
+		var previous = player.life;
+		player.life = amount;
+		if (scoreboard.settings.minLife != null && player.life < scoreboard.settings.minLife) 
+            player.life = scoreboard.settings.minLife;
+		if (scoreboard.settings.maxLife != null && player.life > scoreboard.settings.maxLife) 
+            player.life = scoreboard.settings.maxLife;
+            
+		this.save();
+		return player.life - previous;
+	},
+
+	setPoison: function(playerKey, amount)
+	{
+        var player = this._store.players[playerKey];
+		var previous = player.poison;
+		player.poison = amount;
+		if (scoreboard.settings.minPoison != null && player.poison < scoreboard.settings.minPoison) 
+            player.poison = scoreboard.settings.minPoison;
+		if (scoreboard.settings.maxPoison != null && player.poison > scoreboard.settings.maxPoison) 
+            player.poison = scoreboard.settings.maxPoison;
+            
+		this.save();
+		return player.poison - previous;
+	},
+	 
+	setCommanderDamage: function(playerKey, commanderKey, amount)
+	{
+        var player = this._store.players[playerKey];
+		var previous = player.commanderDamage[commanderKey];
+		player.commanderDamage[commanderKey] = amount;
+		if(scoreboard.settings.minCommanderDamage != null && player.commanderDamage[commanderKey] < scoreboard.settings.minCommanderDamage) 
+            player.commanderDamage[commanderKey] = scoreboard.settings.minCommanderDamage;
+		if(scoreboard.settings.maxCommanderDamage != null && player.commanderDamage[commanderKey] > scoreboard.settings.maxCommanderDamage)
+            player.commanderDamage[commanderKey] = scoreboard.settings.maxCommanderDamage;
+            
+		this.save();
+		return player.commanderDamage[commanderKey] - previous;
+	},
+	
+	newGame: function()
+	{
+		for(var playerKey in this._store.players)
+		{
+            var player = this._store.players[playerKey];
+			player.life = scoreboard.settings.startingLife;
+			player.poison = scoreboard.settings.startingPoison;
+			
+			for(var commanderKey in player.commanderDamage)
+			{
+				player.commanderDamage[commanderKey] = scoreboard.settings.startingCommanderDamage;
+			}
+		}
+		this.save();
+	},
+	
+	save: function()
+	{
+		if(typeof(Storage) !== "undefined" && typeof(localStorage) !== "undefined" ) 
+		{
+			localStorage.setItem(this._localStorageKey, JSON.stringify({ version: this._localStorageVersion, data: this._store }));
+		}
+	},
+	
+	load: function()
+	{
+		if(typeof(Storage) !== "undefined" && typeof(localStorage) !== "undefined" ) 
+		{
+			var storedObject = JSON.parse(localStorage.getItem(this._localStorageKey));
+			if(storedObject!=null && storedObject.data != null)
+			{
+                if (storedObject.version == this._localStorageVersion)
+                {
+				    this._store = storedObject.data;
+                }
+                else 
+                {
+                    this._store = this.upgrade(storedObject);
+                    this.save();
+                }
+			}
+		}
+	},
+    
+    clear: function() 
+    {
+        this._store = null;
+        this.save();
+    },
+    
+    upgrade: function(storedObject) {
+        var data = storedObject.data;
+        if (storedObject.version < 2) 
+        {    
+            var upgradedData = { players: {}, commanders: {}};
+            for(var playerKey in data)
+            {
+                var playerObject = data[playerKey];
+                upgradedData.players[playerKey] = playerObject;
+                upgradedData.commanders[playerObject.commanderKey] = playerObject;
+            }
+            data = upgradedData;
+        }
+        return data;
+    }
+}
