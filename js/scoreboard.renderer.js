@@ -344,7 +344,12 @@ scoreboard.renderer = {
 			.addClass('btn-default')
             .append('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>')
 			.append(' Remove ' + scoreboard.datastore.getPlayerName(playerKey))
-			.click(function() { scoreboard.functions.removePlayer(playerKey); });
+			.click(function() { 
+				if (confirm("Are you sure you want to remove " + scoreboard.datastore.getPlayerName(playerKey) + ", their lifetotal and commander damage received?"))
+				{
+					scoreboard.functions.removePlayer(playerKey); 
+				}
+			});
 	},
     
     destroyRemovePlayerButton: function(playerKey)
@@ -361,7 +366,12 @@ scoreboard.renderer = {
 			.addClass('btn-default')
             .append('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>')
 			.append(' Remove ' + scoreboard.datastore.getCommanderName(commanderKey))
-			.click(function() { scoreboard.functions.removeCommander(commanderKey); });
+			.click(function() { 
+				if (confirm("Are you sure you want to remove " + scoreboard.datastore.getCommanderName(commanderKey) + " and the damage it dealt?"))
+				{
+					scoreboard.functions.removeCommander(commanderKey); 
+				}
+			});
 	},
     
     destroyRemoveCommanderButton: function(commanderKey)
