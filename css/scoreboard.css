@@ -51,6 +51,16 @@
 	height: 70px;
 }
 
+button.active > span.whenNotActive
+{
+  display: none;
+}
+
+button:not(.active) > .whenActive 
+{
+  display: none;
+}
+
 .commanderIconGathererCreature
 {
 	background-size: 120px;

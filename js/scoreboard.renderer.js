@@ -9,10 +9,6 @@
 
 scoreboard.renderer = {
 
-	_showPoison: false,
-	_showCommanderImages: false,
-	_showCommanderDamage: true,
-
 	init: function()
 	{
 		var playerKeys = scoreboard.datastore.getPlayerKeys();
@@ -26,22 +22,13 @@ scoreboard.renderer = {
 		{
 			this.createRemoveCommanderButton(commanderKeys[i]);
 		}
+
+		this._ensureToggleState("#showHidePoisonButton", "Poison");
+		this._ensureToggleState("#showHideCommanderDamageButton", "CommanderDamage");
+		this._ensureToggleState("#showHideImagesButton", "CommanderImages");
+		this._ensureToggleState("#showHideLogButton", "Log");
+
 		this.redraw();
-	},
-	
-	togglePoison: function()
-	{
-		this._showPoison = !this._showPoison;
-	},
-	
-	toggleImages: function()
-	{
-		this._showCommanderImages = !this._showCommanderImages;
-	},
-	
-	toggleCommanderDamage: function()
-	{
-		this._showCommanderDamage = !this._showCommanderDamage;
 	},
 	
     reloadPage: function () 
@@ -57,6 +44,11 @@ scoreboard.renderer = {
 	
 		var playerKeys = scoreboard.datastore.getPlayerKeys();
 		var commanderKeys = scoreboard.datastore.getCommanderKeys();
+		var showPoison = scoreboard.datastore.isActive("Poison");
+		var showCommanderDamage = scoreboard.datastore.isActive("CommanderDamage");
+		var showCommanderImages = scoreboard.datastore.isActive("CommanderImages");
+
+		this._ensureToggleLogDisplay();
 
 		$('#mainContainer').append('<table class="" />');
 		$('#mainContainer table').addClass('table').addClass('table-striped');
@@ -67,12 +59,12 @@ scoreboard.renderer = {
 		var headers = [ {name: 'Player', iconClass: "glyphicon-user" }, 
 						{ name: 'Life', iconClass: "glyphicon-tree-deciduous", buttons: true, clickFunction: function(amount){ scoreboard.functions.incrementDamageAll(amount); } } ];
 						
-		if (this._showPoison) 
+		if (showPoison) 
 		{
 			headers.push({ name: 'Poison', iconClass: "glyphicon-tint", buttons: true, clickFunction: function(amount){ scoreboard.functions.incrementPoisonAll(amount); } });		
 		}
 		
-		if(this._showCommanderDamage)
+		if(showCommanderDamage)
 		{
 			for(var i=0;i<commanderKeys.length;i++)
 			{
@@ -100,7 +92,7 @@ scoreboard.renderer = {
 			
 			if (typeof(headers[i].commanderName) !='undefined')
 			{
-				if(this._showCommanderImages)
+				if(showCommanderImages)
 				{
 					$('#mainContainer table thead tr th:last').append('<img />');
 					$('#mainContainer table thead tr th:last img:last')
@@ -165,7 +157,7 @@ scoreboard.renderer = {
 				promptFunction:  this._getPromptFunction('damage',  playerKeys[i])
 			});
 			
-			if (this._showPoison) 
+			if (showPoison) 
 			{
 				columns.push({
 					name: 'poison_' + playerKeys[i],
@@ -178,7 +170,7 @@ scoreboard.renderer = {
 				});
 			}
 			
-			if(this._showCommanderDamage)
+			if(showCommanderDamage)
 			{
 				for(var j=0;j<commanderKeys.length;j++)
 				{
@@ -214,6 +206,11 @@ scoreboard.renderer = {
 		}
 	},
 	
+	_ensureToggleState: function (button, toggleKey) {
+		var active = scoreboard.datastore.isActive(toggleKey);
+		$(button).toggleClass("active", active);
+	},
+
 	_getImageCallback: function(commanderName)
 	{
 		return (function(cardInfo)
@@ -440,11 +437,10 @@ scoreboard.renderer = {
 		});
 	},
 	 
-	toggleLogDisplay: function()
+	_ensureToggleLogDisplay: function()
 	{
-        var log = $('textarea.logDisplay');
-		log.toggleClass('hidden');
-        return !log.hasClass('hidden');
+		$('textarea.logDisplay')
+			.toggleClass('hidden', !scoreboard.datastore.isActive("Log"));
  	},
 	
     getCommanderFormData: function() {
