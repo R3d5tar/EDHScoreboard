@@ -9,10 +9,6 @@
 
 scoreboard.renderer = {
 
-	_showPoison: false,
-	_showCommanderImages: false,
-	_showCommanderDamage: true,
-
 	init: function()
 	{
 		var playerKeys = scoreboard.datastore.getPlayerKeys();
@@ -26,22 +22,13 @@ scoreboard.renderer = {
 		{
 			this.createRemoveCommanderButton(commanderKeys[i]);
 		}
+
+		this._ensureToggleState("#showHidePoisonButton", "Poison");
+		this._ensureToggleState("#showHideCommanderDamageButton", "CommanderDamage");
+		this._ensureToggleState("#showHideImagesButton", "CommanderImages");
+		this._ensureToggleState("#showHideLogButton", "Log");
+
 		this.redraw();
-	},
-	
-	togglePoison: function()
-	{
-		this._showPoison = !this._showPoison;
-	},
-	
-	toggleImages: function()
-	{
-		this._showCommanderImages = !this._showCommanderImages;
-	},
-	
-	toggleCommanderDamage: function()
-	{
-		this._showCommanderDamage = !this._showCommanderDamage;
 	},
 	
     reloadPage: function () 
@@ -57,6 +44,11 @@ scoreboard.renderer = {
 	
 		var playerKeys = scoreboard.datastore.getPlayerKeys();
 		var commanderKeys = scoreboard.datastore.getCommanderKeys();
+		var showPoison = scoreboard.datastore.isActive("Poison");
+		var showCommanderDamage = scoreboard.datastore.isActive("CommanderDamage");
+		var showCommanderImages = scoreboard.datastore.isActive("CommanderImages");
+
+		this._ensureToggleLogDisplay();
 
 		$('#mainContainer').append('<table class="" />');
 		$('#mainContainer table').addClass('table').addClass('table-striped');
@@ -67,12 +59,12 @@ scoreboard.renderer = {
 		var headers = [ {name: 'Player', iconClass: "glyphicon-user" }, 
 						{ name: 'Life', iconClass: "glyphicon-tree-deciduous", buttons: true, clickFunction: function(amount){ scoreboard.functions.incrementDamageAll(amount); } } ];
 						
-		if (this._showPoison) 
+		if (showPoison) 
 		{
 			headers.push({ name: 'Poison', iconClass: "glyphicon-tint", buttons: true, clickFunction: function(amount){ scoreboard.functions.incrementPoisonAll(amount); } });		
 		}
 		
-		if(this._showCommanderDamage)
+		if(showCommanderDamage)
 		{
 			for(var i=0;i<commanderKeys.length;i++)
 			{
@@ -83,32 +75,29 @@ scoreboard.renderer = {
 				});
 			}
 		}
-		
-		var columnWidthClass = '';
-		if (headers.length <= 6) {
-			columnWidthClass = 'col-md-2';
-		}
-		else if(headers.lastIndexOf <= 12) {
-			columnWidthClass = 'col-md-1';
-		}
 
 		//render headers based on objects
 		for(var i=0;i<headers.length;i++)
 		{
 			$('#mainContainer table thead tr').append('<th />');
-			$('#mainContainer table thead tr th:last').addClass(columnWidthClass);
-			
-			if (typeof(headers[i].commanderName) !='undefined')
+		
+			if (typeof(headers[i].commanderName) != 'undefined')
 			{
-				if(this._showCommanderImages)
+				$('#mainContainer table thead tr th:last').append('<button />');
+				$('#mainContainer table thead tr th:last button')	
+					.addClass('btn btn-default btn-xs')
+					.css('float', 'right')
+					.append('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>')
+					.click(this._getRemoveCommanderFunction(headers[i].commanderName));
+
+				if(showCommanderImages)
 				{
-					$('#mainContainer table thead tr th:last').append('<img />');
-					$('#mainContainer table thead tr th:last img:last')
-						.addClass('commanderIcon')
+					$('#mainContainer table thead tr th:last').append('<div class="commanderImage"/>');
+					$('#mainContainer table thead tr th:last div.commanderImage')
 						.attr('id', 'image_' + headers[i].commanderName);
 					
 					scoreboard.cardinfo.getCardImage(headers[i].name, this._getImageCallback(headers[i].commanderName));
-				}
+				}				
 			}
 
 			$('#mainContainer table thead tr th:last').append('<h4 />');
@@ -123,17 +112,6 @@ scoreboard.renderer = {
 			}
 			
 			$('#mainContainer table thead tr th:last h4').append(headers[i].name);
-
-			if (typeof(headers[i].commanderName) != 'undefined')
-			{
-				$('#mainContainer table thead tr th:last h4').append('<button />');
-				$('#mainContainer table thead tr th:last h4 button')	
-					.addClass('btn btn-default btn-xs')
-					.css('float', 'right')
-					.append('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>')
-					.click(this._getRemoveCommanderFunction(headers[i].commanderName));;
-			}
-
 		}
 
 		$('#mainContainer table').append('<tbody />');
@@ -165,7 +143,7 @@ scoreboard.renderer = {
 				promptFunction:  this._getPromptFunction('damage',  playerKeys[i])
 			});
 			
-			if (this._showPoison) 
+			if (showPoison) 
 			{
 				columns.push({
 					name: 'poison_' + playerKeys[i],
@@ -178,7 +156,7 @@ scoreboard.renderer = {
 				});
 			}
 			
-			if(this._showCommanderDamage)
+			if(showCommanderDamage)
 			{
 				for(var j=0;j<commanderKeys.length;j++)
 				{
@@ -214,12 +192,22 @@ scoreboard.renderer = {
 		}
 	},
 	
+	_ensureToggleState: function (button, toggleKey) {
+		var active = scoreboard.datastore.isActive(toggleKey);
+		$(button).toggleClass("active", active);
+	},
+
 	_getImageCallback: function(commanderName)
 	{
-		return (function(cardInfo)
+		return function(cardInfo)
 		{
-			$('#image_' + commanderName).css('background-image', 'url(' + cardInfo.imageUrl + ')').removeClass().addClass('commanderIcon').addClass(cardInfo.positioningClass);
-		});
+			var gradient = 'linear-gradient(rgba(255, 255, 255, .0), rgba(255, 255, 255, .05), rgba(255, 255, 255, .8), rgba(255, 255, 255, 1.2))';
+			$('#image_' + commanderName)
+				.css('background-image', 'url(' + cardInfo.imageUrl + '), ' + gradient)
+				.prop('title', cardInfo.cardName + ' by '+ cardInfo.artist)
+				.toggleClass('planeswalker', cardInfo.isPlaneswalker)
+				.toggleClass('classic', cardInfo.isClassic);
+		};
 	},
 	
 	_getRemovePlayerFunction: function(playerKey) {
@@ -440,11 +428,10 @@ scoreboard.renderer = {
 		});
 	},
 	 
-	toggleLogDisplay: function()
+	_ensureToggleLogDisplay: function()
 	{
-        var log = $('textarea.logDisplay');
-		log.toggleClass('hidden');
-        return !log.hasClass('hidden');
+		$('textarea.logDisplay')
+			.toggleClass('hidden', !scoreboard.datastore.isActive("Log"));
  	},
 	
     getCommanderFormData: function() {

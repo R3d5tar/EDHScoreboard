@@ -8,11 +8,12 @@
 */
 
 scoreboard.datastore = {
-	_localStorageVersion: 2,
+	_localStorageVersion: 3,
 	_localStorageKey: 'scoreboard_data',
 	_store: { 
         players: {},
-        commanders: {}
+		commanders: {},
+		toggles: {}
     },
 	
 	init: function()
@@ -23,7 +24,7 @@ scoreboard.datastore = {
 	hasData: function()
 	{
 		return Object.keys(this._store.players).length > 0 
-            || Object.keys(this._store.commanders).length > 0;
+			|| Object.keys(this._store.commanders).length > 0;
 	},
 	
 	addPlayerWithCommander: function(playerName, commanderName, hasInfect)
@@ -236,6 +237,26 @@ scoreboard.datastore = {
 		return player.commanderDamage[commanderKey] - previous;
 	},
 	
+	isActive: function (toggleKey) {
+		var toggle = this._store.toggles[toggleKey];
+		return !!toggle && toggle.activated;
+	},
+
+	setToggle: function (toggleKey, activated) {
+		var toggle = this._store.toggles[toggleKey];
+		if (!toggle) {
+			toggle = { toggleKey: toggleKey, activated: activated };
+			this._store.toggles[toggleKey] = toggle;
+		} else {
+			toggle.activated = activated;
+		}
+		this.save();
+	},
+
+	toggle: function (toggleKey) {
+		this.setToggle(toggleKey, !this.isActive(toggleKey));
+	},
+
 	newGame: function()
 	{
 		for(var playerKey in this._store.players)
@@ -290,6 +311,7 @@ scoreboard.datastore = {
         var data = storedObject.data;
         if (storedObject.version < 2) 
         {    
+			//splitting commander and player
             var upgradedData = { players: {}, commanders: {}};
             for(var playerKey in data)
             {
@@ -298,7 +320,15 @@ scoreboard.datastore = {
                 upgradedData.commanders[playerObject.commanderKey] = playerObject;
             }
             data = upgradedData;
-        }
+		}
+		if (storedObject.version < 3)
+		{ 	
+			//introduction of toggles (in store)
+			var upgradedData = { players: {}, commanders: {}, toggles: {}};
+			upgradedData.players = data.players;
+			upgradedData.commanders = data.commanders;
+			data = upgradedData;
+		}
         return data;
     }
 }

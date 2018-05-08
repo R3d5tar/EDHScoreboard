@@ -201,24 +201,25 @@ scoreboard.functions = {
     
 	toggleLogDisplay: function()
 	{
-		return scoreboard.renderer.toggleLogDisplay();
+		scoreboard.datastore.toggle("Log");
+		scoreboard.renderer.redraw();
 	},
 	
 	toggleImageDisplay: function()
 	{
-		scoreboard.renderer.toggleImages();
+		scoreboard.datastore.toggle("CommanderImages");
 		scoreboard.renderer.redraw();
 	},
 	
 	toggleCommanderDamageDisplay: function()
 	{
-		scoreboard.renderer.toggleCommanderDamage();
+		scoreboard.datastore.toggle("CommanderDamage");
 		scoreboard.renderer.redraw();
 	},
 	
 	togglePoisonDisplay: function()
 	{
-		scoreboard.renderer.togglePoison();
+		scoreboard.datastore.toggle("Poison");
 		scoreboard.renderer.redraw();
 	}
 }

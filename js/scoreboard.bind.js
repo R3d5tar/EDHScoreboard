@@ -34,12 +34,7 @@ $(document).ready()
 	
 	$('#showHideLogButton').click(function()
 	{
-		var shown = scoreboard.functions.toggleLogDisplay();
-        if (shown) {
-            $('#showHideLogButton').html("Hide");
-        } else {
-            $('#showHideLogButton').html("Show");
-        }
+		scoreboard.functions.toggleLogDisplay();
 	});
 	
 	$('#newGameButton').click(function()

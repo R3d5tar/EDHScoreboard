@@ -143,24 +143,37 @@
                             <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                             Start New Game
                         </button>
-                        
-                        <button id="showHideImagesButton" type="button" class="btn btn-default" data-toggle="button" autocomplete="off">
-                            <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
-                            Toggle Commander Images
-                        </button>
-                        <button id="showHideCommanderDamageButton" type="button" class="btn btn-default active" data-toggle="button" autocomplete="off">
-                            <span class="glyphicon glyphicon-tower" aria-hidden="true"></span>
-                            Toggle Commander Damage
-                        </button>
-                        <button id="showHidePoisonButton" type="button" class="btn btn-default" data-toggle="button" autocomplete="off">
-                            <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
-                            Toggle Poison
-                        </button>
                         <button id="resetAllButton" type="button" class="btn btn-default">
                             <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
                             Clear All
                         </button>
                     </div>
+                </div>
+                <div class="form-group">
+                    <h4>
+                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        Settings
+                    </h4>
+                    <div class="btn-group form-group" role="group">
+                        <button id="showHideCommanderDamageButton" type="button" class="btn btn-default" data-toggle="button" autocomplete="off">
+                            <span class="glyphicon glyphicon-tower" aria-hidden="true"></span>
+                            <span class="whenActive">Hide</span>
+                            <span class="whenNotActive">Show</span>
+                            Commander Damage
+                        </button>
+                        <button id="showHideImagesButton" type="button" class="btn btn-default" data-toggle="button" autocomplete="off">
+                            <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                            <span class="whenActive">Hide</span>
+                            <span class="whenNotActive">Show</span>
+                            Commander Images
+                        </button>
+                        <button id="showHidePoisonButton" type="button" class="btn btn-default" data-toggle="button" autocomplete="off">
+                            <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
+                            <span class="whenActive">Hide</span>
+                            <span class="whenNotActive">Show</span>
+                            Poison
+                        </button>
+                    </div>  
                 </div> 
                 
                 <div class="form-group">
@@ -184,7 +197,10 @@
 		<div id="logContainer" class="row">
             <h4>
                 Log
-                <button id="showHideLogButton" type="button" class="btn btn-default">Show</button>
+                <button id="showHideLogButton" type="button" class="btn btn-default" data-toggle="button" autocomplete="off">
+                    <span class="whenActive">Hide</span>
+                    <span class="whenNotActive">Show</span>
+                </button>
             <h4>
             <textarea class="logDisplay hidden" rows="15"></textarea>
 		</div>
@@ -203,7 +219,7 @@
     <script src="js/scoreboard.datastore.js"></script>
     <script src="js/scoreboard.renderer.js"></script>
     <script src="js/scoreboard.functions.js"></script>
-    <script src="js/scoreboard.cardinfo.deckbrew.js"></script>
+    <script src="js/scoreboard.cardinfo.scryfall.js"></script>
     <script src="js/scoreboard.bind.js"></script>
   </body>
 </html>
