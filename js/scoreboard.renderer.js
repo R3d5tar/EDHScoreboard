@@ -75,32 +75,29 @@ scoreboard.renderer = {
 				});
 			}
 		}
-		
-		var columnWidthClass = '';
-		if (headers.length <= 6) {
-			columnWidthClass = 'col-md-2';
-		}
-		else if(headers.lastIndexOf <= 12) {
-			columnWidthClass = 'col-md-1';
-		}
 
 		//render headers based on objects
 		for(var i=0;i<headers.length;i++)
 		{
 			$('#mainContainer table thead tr').append('<th />');
-			$('#mainContainer table thead tr th:last').addClass(columnWidthClass);
-			
-			if (typeof(headers[i].commanderName) !='undefined')
+		
+			if (typeof(headers[i].commanderName) != 'undefined')
 			{
+				$('#mainContainer table thead tr th:last').append('<button />');
+				$('#mainContainer table thead tr th:last button')	
+					.addClass('btn btn-default btn-xs')
+					.css('float', 'right')
+					.append('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>')
+					.click(this._getRemoveCommanderFunction(headers[i].commanderName));
+
 				if(showCommanderImages)
 				{
-					$('#mainContainer table thead tr th:last').append('<img />');
-					$('#mainContainer table thead tr th:last img:last')
-						.addClass('commanderImage')
+					$('#mainContainer table thead tr th:last').append('<div class="commanderImage"/>');
+					$('#mainContainer table thead tr th:last div.commanderImage')
 						.attr('id', 'image_' + headers[i].commanderName);
 					
 					scoreboard.cardinfo.getCardImage(headers[i].name, this._getImageCallback(headers[i].commanderName));
-				}
+				}				
 			}
 
 			$('#mainContainer table thead tr th:last').append('<h4 />');
@@ -115,17 +112,6 @@ scoreboard.renderer = {
 			}
 			
 			$('#mainContainer table thead tr th:last h4').append(headers[i].name);
-
-			if (typeof(headers[i].commanderName) != 'undefined')
-			{
-				$('#mainContainer table thead tr th:last h4').append('<button />');
-				$('#mainContainer table thead tr th:last h4 button')	
-					.addClass('btn btn-default btn-xs')
-					.css('float', 'right')
-					.append('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>')
-					.click(this._getRemoveCommanderFunction(headers[i].commanderName));;
-			}
-
 		}
 
 		$('#mainContainer table').append('<tbody />');
@@ -215,9 +201,12 @@ scoreboard.renderer = {
 	{
 		return function(cardInfo)
 		{
+			var gradient = 'linear-gradient(rgba(255, 255, 255, .0), rgba(255, 255, 255, .05), rgba(255, 255, 255, .8), rgba(255, 255, 255, 1.2))';
 			$('#image_' + commanderName)
-				.css('background-image', 'url(' + cardInfo.imageUrl + ')')
-				.addClass('commanderImageGathererCreature');
+				.css('background-image', 'url(' + cardInfo.imageUrl + '), ' + gradient)
+				.prop('title', cardInfo.cardName + ' by '+ cardInfo.artist)
+				.toggleClass('planeswalker', cardInfo.isPlaneswalker)
+				.toggleClass('classic', cardInfo.isClassic);
 		};
 	},
 	
