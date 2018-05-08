@@ -76,39 +76,64 @@ scoreboard.renderer = {
 		{
 			for(var i=0;i<commanderKeys.length;i++)
 			{
-				headers.push( { name: scoreboard.datastore.getCommanderName(commanderKeys[i]), commanderName: commanderKeys[i], iconClass: null });
+				headers.push( { 
+					name: scoreboard.datastore.getCommanderName(commanderKeys[i]), 
+					commanderName: commanderKeys[i], 
+					iconClass: null 
+				});
 			}
 		}
 		
+		var columnWidthClass = '';
+		if (headers.length <= 6) {
+			columnWidthClass = 'col-md-2';
+		}
+		else if(headers.lastIndexOf <= 12) {
+			columnWidthClass = 'col-md-1';
+		}
+
 		//render headers based on objects
 		for(var i=0;i<headers.length;i++)
 		{
 			$('#mainContainer table thead tr').append('<th />');
-			$('#mainContainer table thead tr th:last').addClass('col-md-1');
+			$('#mainContainer table thead tr th:last').addClass(columnWidthClass);
 			
-			if(this._showCommanderImages && typeof(headers[i].commanderName)!='undefined')
+			if (typeof(headers[i].commanderName) !='undefined')
 			{
-				$('#mainContainer table thead tr th:last').append('<img />');
-				$('#mainContainer table thead tr th:last img:last').addClass('commanderIcon');
-				$('#mainContainer table thead tr th:last img:last').attr('id', 'image_' + headers[i].commanderName);
-				
-				scoreboard.cardinfo.getCardImage(headers[i].name, this._getImageCallback(headers[i].commanderName));
+				if(this._showCommanderImages)
+				{
+					$('#mainContainer table thead tr th:last').append('<img />');
+					$('#mainContainer table thead tr th:last img:last')
+						.addClass('commanderIcon')
+						.attr('id', 'image_' + headers[i].commanderName);
+					
+					scoreboard.cardinfo.getCardImage(headers[i].name, this._getImageCallback(headers[i].commanderName));
+				}
 			}
-			
+
 			$('#mainContainer table thead tr th:last').append('<h4 />');
-			if(typeof(headers[i].iconClass)!='undefined') 
+			if(typeof(headers[i].iconClass) != 'undefined') 
 			{
-				$('#mainContainer table thead tr th:last h4').append('<span />');
-				$('#mainContainer table thead tr th:last h4 span:last').attr('class', "glyphicon " + headers[i].iconClass);
-			 	$('#mainContainer table thead tr th:last h4 span:last').attr('aria-hidden', "true");
-				 $('#mainContainer table thead tr th:last h4').append("&nbsp;")
+				$('#mainContainer table thead tr th:last h4')
+					.append('<span />')
+					.append("&nbsp;");
+				$('#mainContainer table thead tr th:last h4 span:last')
+					.attr('class', "glyphicon " + headers[i].iconClass)
+					.attr('aria-hidden', "true");
 			}
-			$('#mainContainer table thead tr th:last h4').append(headers[i].name);
 			
-			if(typeof(headers[i].buttons)!='undefined')
+			$('#mainContainer table thead tr th:last h4').append(headers[i].name);
+
+			if (typeof(headers[i].commanderName) != 'undefined')
 			{
-				this._drawButtons(headers[i].clickFunction, '#mainContainer table thead tr th:last');
+				$('#mainContainer table thead tr th:last h4').append('<button />');
+				$('#mainContainer table thead tr th:last h4 button')	
+					.addClass('btn btn-default btn-xs')
+					.css('float', 'right')
+					.append('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>')
+					.click(this._getRemoveCommanderFunction(headers[i].commanderName));;
 			}
+
 		}
 
 		$('#mainContainer table').append('<tbody />');
@@ -121,6 +146,13 @@ scoreboard.renderer = {
 			$('#mainContainer table tbody tr:last').append('<td />');
 			$('#mainContainer table tbody tr:last td:last').append('<h2 />');
 			$('#mainContainer table tbody tr:last td:last h2').html(scoreboard.datastore.getPlayerName(playerKeys[i]));
+
+			$('#mainContainer table tbody tr:last td:last').append('<button />');
+			$('#mainContainer table tbody tr:last td:last button:last')	
+				.addClass('btn btn-default btn-xs')
+				.append('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>')
+				.append(' Remove')
+				.click(this._getRemovePlayerFunction(playerKeys[i]));
 
 			var columns = [];
 			columns.push({
@@ -165,14 +197,19 @@ scoreboard.renderer = {
 			for(var j=0;j<columns.length;j++)
 			{
 				$('#mainContainer table tbody tr:last').append('<td />');
-				$('#mainContainer table tbody tr:last td:last').append('<h2/>');
-				$('#mainContainer table tbody tr:last td:last h2').append('<a />');
-				$('#mainContainer table tbody tr:last td:last h2 a').attr( 'id', 'number_'  + columns[j].name);
-				$('#mainContainer table tbody tr:last td:last h2 a').html(columns[j].value);
-				$('#mainContainer table tbody tr:last td:last h2 a').click(columns[j].promptFunction);
-			
-				this._drawProgressBar('#mainContainer table tbody tr:last td:last', columns[j].name, columns[j].value, columns[j].min, columns[j].max, columns[j].descending);
 				this._drawButtons(columns[j].clickFunction, '#mainContainer table tbody tr:last td:last');
+
+				$('#mainContainer table tbody tr:last td:last').append('<h2/>');
+				$('#mainContainer table tbody tr:last td:last h2')
+					.addClass("text-center minor-margins")
+					.append('<a />');
+				$('#mainContainer table tbody tr:last td:last h2 a')
+					.attr( 'id', 'number_'  + columns[j].name)
+					.html(columns[j].value)
+					.click(columns[j].promptFunction);
+
+				this._drawProgressBar('#mainContainer table tbody tr:last td:last', 
+					columns[j].name, columns[j].value, columns[j].min, columns[j].max, columns[j].descending);
 			}
 		}
 	},
@@ -185,6 +222,26 @@ scoreboard.renderer = {
 		});
 	},
 	
+	_getRemovePlayerFunction: function(playerKey) {
+		var playerName = scoreboard.datastore.getPlayerName(playerKey);
+		var message = "Are you sure you want to remove " + playerName + ", their life total and received commander damage?";
+		return function() { 
+			if (confirm(message)) {
+				scoreboard.functions.removePlayer(playerKey); 
+			}
+		};
+	},
+
+	_getRemoveCommanderFunction: function (commanderKey) {
+		var commanderName = scoreboard.datastore.getCommanderName(commanderKey);
+		var message = "Are you sure you want to remove " + commanderName + " and the damage it dealt?";
+		return function() { 
+			if (confirm(message)) {
+				scoreboard.functions.removeCommander(commanderKey); 
+			}
+		};
+	},
+
 	_getPromptFunction: function(type, playerName, commanderName)
 	{
 		var result = function() {};
@@ -200,7 +257,7 @@ scoreboard.renderer = {
 		{
 			result = function(amount) { scoreboard.functions.setCommanderDamage(playerName,commanderName, amount); };
 		}
-		return(function(){ scoreboard.renderer.promptForAmount(result); });
+		return (function() { scoreboard.renderer.promptForAmount(result); });
 	},
 	
 	_getClickFunction: function(type, playerName, commanderName)
@@ -223,37 +280,36 @@ scoreboard.renderer = {
 	 
 	_drawButtons: function(clickFunction, parentElement)
 	{
-		$(parentElement).append('<button>+1</button>');
-		$(parentElement + ' button:last').addClass('btn').addClass('btn-default').addClass('btn-xs').addClass('lifeButton');
-		$(parentElement + ' button:last').click(function(){clickFunction(1);});
-
-		$(parentElement).append('<button>-1</button>');
-		$(parentElement + ' button:last').addClass('btn').addClass('btn-default').addClass('btn-xs').addClass('lifeButton');
-		$(parentElement + ' button:last').click(function(){clickFunction(-1);});
-
-		$(parentElement).append('<button>+5</button>');
-		$(parentElement + ' button:last').addClass('btn').addClass('btn-default').addClass('btn-xs').addClass('lifeButton');
-		$(parentElement + ' button:last').click(function(){clickFunction(+5);});
-
-		$(parentElement).append('<button>-5</button>');
-		$(parentElement + ' button:last').addClass('btn').addClass('btn-default').addClass('btn-xs').addClass('lifeButton');
-		$(parentElement + ' button:last').click(function(){clickFunction(-5);});
+		$(parentElement).append('<div class="center-block"/>')
+		$(parentElement).find('div')
+			.append('<button class="lose">-5</button>')
+			.append('<button class="lose">-1</button>')
+			.append('<button class="gain">+5</button>')
+			.append('<button class="gain">+1</button>');
+		
+		$(parentElement).find('div button')
+			.addClass('btn btn-default btn-xs lifeButton')
+			.click(
+				function() { 
+					clickFunction(parseInt( $(this).html() ));
+				});
 	},
-	 
+
 	_drawProgressBar: function(destination, name, current, min, max, descending)
 	{
 		$(destination).append('<div />');
-		$(destination + ' div').addClass('progress');
-		$(destination + ' div').css('margin-bottom','5px');
-		
-		$(destination + ' div').append('<div />');
+		$(destination).find('div:last')
+			.addClass('progress minor-margins')
+			.append('<div />');
 
 		var width = this._getProgressWidth(current, min, max);
 		var className = this._getProgressBarClass(width, descending);
 		
-		$(destination + ' div.progress div').addClass('progress-bar').addClass(className);
-		$(destination + ' div.progress div').attr('id', 'progressBar_' + name);
-		$(destination + ' div.progress div').css('width', width + '%');
+		$(destination + ' div.progress div')
+			.addClass('progress-bar')
+			.addClass(className)
+			.attr('id', 'progressBar_' + name)
+			.css('width', width + '%');
 	},
 	
 	_getProgressWidth: function(current, min, max)
@@ -344,7 +400,7 @@ scoreboard.renderer = {
 			.addClass('btn-default')
             .append('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>')
 			.append(' Remove ' + scoreboard.datastore.getPlayerName(playerKey))
-			.click(function() { scoreboard.functions.removePlayer(playerKey); });
+			.click(this._getRemovePlayerFunction(playerKey));
 	},
     
     destroyRemovePlayerButton: function(playerKey)
@@ -361,7 +417,7 @@ scoreboard.renderer = {
 			.addClass('btn-default')
             .append('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>')
 			.append(' Remove ' + scoreboard.datastore.getCommanderName(commanderKey))
-			.click(function() { scoreboard.functions.removeCommander(commanderKey); });
+			.click(this._getRemoveCommanderFunction(commanderKey));
 	},
     
     destroyRemoveCommanderButton: function(commanderKey)

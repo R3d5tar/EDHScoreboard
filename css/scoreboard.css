@@ -27,7 +27,22 @@
 }
 
 .lifeButton {
-	margin-right: 2px;
+  margin-right: 1px;
+  margin-left: 1px;
+  vertical-align: top;
+}
+
+.lifeButton.lose {
+  float: left;
+}
+
+.lifeButton.gain {
+  float: right;
+}
+
+.minor-margins {
+  margin-top: 5px; 
+  margin-bottom: 5px;
 }
 
 .commanderIcon

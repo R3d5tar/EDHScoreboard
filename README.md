@@ -2,7 +2,7 @@ Browser-based EDH (Commander) scoreboard written with JS and Bootstrap (http://g
 
 Forked from Badaro. My local EDH playgroup uses it often and likes the basic scoreboard very much, but are missing some features that would improve the scoreboard for our houserules and EDH variations.
 
-Pending changes for R3d5tar's local playgroup:
+## Pending changes for R3d5tar's local playgroup:
 - Support for tracking a 2HG EDH match:
   This requires that teams can be registerd and that a team will have a shared life total/commander damage/poison, but that the number of commanders in the match is doubled.
   Expected approach for development: splitting the registration of Players/Teams and Commanders. In a 2HG game a team will have 2 commanders, managing a relation betweeen players and commanders seams optional for score keeping.
@@ -19,13 +19,13 @@ Pending changes for R3d5tar's local playgroup:
 - Support for tracking Experience counters
   Implementation should be like poison but without a maximum.
 
-Pending improvements:
+## Pending improvements:
 - Improve resposiveness, the layout of some buttons is strange on smaller screens. 
 - Add remove buttons into score table next to player name.
 - Add Footer with Copyright and Contact Info
 - Remember toggle states, after refesh or revisit.
 
-Ideas from reddit, under consideration:
+## Ideas from reddit, under consideration:
 - Add a counter for the number of times the commander re-entered the battlefield
 - Add a configuration to allow life going negative (when using Platinum Angel or similar effects)
 - Add a configuration for maximum poison counters (for playgroups that prefer to use 15 or 20)

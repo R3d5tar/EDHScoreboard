@@ -17,16 +17,19 @@ $(document).ready()
 	$('#addPlayerButton').click(function()
 	{
 		scoreboard.functions.addPlayer();
+        return false;
 	});
     
     $('#addCommanderButton').click(function()
 	{
 		scoreboard.functions.addCommander();
+        return false;
 	});
     
     $('#addPlayerWithCommanderButton').click(function()
 	{
 		scoreboard.functions.addPlayerWithCommander();
+        return false;
 	});
 	
 	$('#showHideLogButton').click(function()
@@ -61,7 +64,7 @@ $(document).ready()
 	
     $('#resetAllButton').click(function() 
     {
-        if(confirm("This will remove all registered players, commanders, lifetotals, etc. Are you sure to clear this data?")) 
+        if(confirm("This will remove all registered players, commanders, life totals, etc. Are you sure to clear this data?")) 
         {
             scoreboard.functions.clearAll();
         }
