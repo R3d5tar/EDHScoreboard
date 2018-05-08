@@ -45,12 +45,6 @@
   margin-bottom: 5px;
 }
 
-.commanderIcon
-{
-	width: 100px;
-	height: 70px;
-}
-
 button.active > span.whenNotActive
 {
   display: none;
@@ -61,14 +55,14 @@ button:not(.active) > .whenActive
   display: none;
 }
 
-.commanderIconGathererCreature
+.commanderImage
+{
+	width: 100px;
+	height: 70px;
+}
+
+.commanderImageGathererCreature
 {
 	background-size: 120px;
 	background-position: -10px -20px;
-}
-
-.commanderIconGathererPlaneswalker
-{
-	background-size: 145px;
-	background-position: -25px -20px;
 }

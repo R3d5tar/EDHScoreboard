@@ -96,7 +96,7 @@ scoreboard.renderer = {
 				{
 					$('#mainContainer table thead tr th:last').append('<img />');
 					$('#mainContainer table thead tr th:last img:last')
-						.addClass('commanderIcon')
+						.addClass('commanderImage')
 						.attr('id', 'image_' + headers[i].commanderName);
 					
 					scoreboard.cardinfo.getCardImage(headers[i].name, this._getImageCallback(headers[i].commanderName));
@@ -213,10 +213,12 @@ scoreboard.renderer = {
 
 	_getImageCallback: function(commanderName)
 	{
-		return (function(cardInfo)
+		return function(cardInfo)
 		{
-			$('#image_' + commanderName).css('background-image', 'url(' + cardInfo.imageUrl + ')').removeClass().addClass('commanderIcon').addClass(cardInfo.positioningClass);
-		});
+			$('#image_' + commanderName)
+				.css('background-image', 'url(' + cardInfo.imageUrl + ')')
+				.addClass('commanderImageGathererCreature');
+		};
 	},
 	
 	_getRemovePlayerFunction: function(playerKey) {
