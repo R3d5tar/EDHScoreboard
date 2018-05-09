@@ -8,21 +8,34 @@
 */
 
 scoreboard.cardinfo = {
-	_scryfallApiSearch: 'https://api.scryfall.com/cards/search?q={query}',
-
-	init: function()
-	{
-	},
-
-	getCardImage: function(searchedCardName, callback)
-	{
-		this._search(searchedCardName, callback);
-	},
 	
-	_search: function(searchedCardName, callback) {
-		var query = escape('t:legendary order:edhrec ' + searchedCardName);
+	init: function()
+	{ },
+
+	autoComplete: function (text, callback, maxResults = 20) 
+	{
+		var autoCompleteUrl = 'https://api.scryfall.com/cards/autocomplete?q={query}';
 		$.ajax({
-			url: this._scryfallApiSearch.replace('{query}', query),
+			url: autoCompleteUrl.replace('{query}', escape(text)),
+			dataType: 'json',
+			success: function(data)
+			{
+				var results = data.data.slice(0, maxResults);;
+				callback(results);
+			},
+			error : function()
+			{ 
+				callback([]);
+			},
+			cache: true
+		});
+	},
+
+	getCardImage: function(searchedCardName, callback) {
+		var searchUrl = 'https://api.scryfall.com/cards/search?q={query}';
+		var query = escape('order:edhrec ' + searchedCardName);
+		$.ajax({
+			url: searchUrl.replace('{query}', query),
 			dataType: 'json',
 			success: function(data)
 			{
@@ -35,7 +48,7 @@ scoreboard.cardinfo = {
 						cardName: cardData.name,
 						imageUrl: cardData.image_uris.art_crop,
 						artist: cardData.artist,
-						isPlaneswalker: cardData.type_line.includes('Planeswalker'),
+						isPlaneswalker: (cardData.type_line) ? cardData.type_line.includes('Planeswalker') : false,
 						isClassic: cardData.frame == '1997'
 					};
 					callback(result);

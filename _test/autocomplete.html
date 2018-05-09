@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  
+	<!-- 
+	Copyright (c) 2015 R3d5tar
+	License: https://github.com/R3d5tar/EDHScoreboard/blob/master/LICENSE
+	
+	Based on:	
+		Copyright (c) 2014-2015 Filipe Badaro
+		License: https://github.com/Badaro/EDHScoreboard/blob/master/LICENSE
+	-->
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EDH Scoreboard</title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="/css/scoreboard.css" rel="stylesheet">
+    <link href="/css/autocomplete.css" rel="stylesheet">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>    
+      
+	<div class="container-fluid">
+		<div id="titleContainer" class="row titleContainer">
+		  <h1 class="titleItem">EDH Scoreboard - <i>NOP Edition</i></h1>
+		</div>
+		
+		<!-- <div id="mainContainer" class="row">
+		</div>
+		
+        <div id="errorContainer" class="row">
+            <div id="generalError" class="alert alert-danger hidden" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                <span class="message"></span>		
+            </div>
+        </div> -->
+        
+		<div id="formContainer" class="row">
+            
+        
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                <form class="panel panel-default">
+                    <div class="panel-heading">
+                        <span class="glyphicon glyphicon-tower" aria-hidden="true"></span>
+                        New Commander
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="inputCommander" class="control-label">Name</label>
+                            <input id="inputCommander" type="text" class="form-control" placeholder="Commander" autocomplete="off">
+                        </div>
+                        <div class="form-group" title="Activate this when the commander has infect, for example: Skithiryx, the Blight Dragon">
+                            <input id="inputInfect" type="checkbox" data-label-text="Infect" >
+			             </div>
+                        <div class="form-group">
+                            <button id="addCommanderButton" type="submit" class="btn btn-primary btn-block">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+                            </button>
+                        </div>
+                        <div id="existingCommanderError" class="alert alert-danger hidden" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            There's already a commander with this name.		
+                        </div>
+                    </div> 
+                </form>
+            </div>
+            
+            
+		</div>
+
+	</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/json2.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-switch.min.js"></script>
+    <script src="/js/bootbox.min.js"></script>
+    <script src="/js/scoreboard.root.js"></script>
+    <!-- <script src="js/scoreboard.settings.js"></script>
+    <script src="js/scoreboard.datastore.js"></script>
+    <script src="js/scoreboard.renderer.js"></script>
+    <script src="js/scoreboard.functions.js"></script> -->
+    <script src="/js/scoreboard.cardinfo.scryfall.js"></script>
+    <script src="/js/autocomplete.js"></script>
+    <!-- <script src="js/scoreboard.bind.js"></script> -->
+    <script>
+        $(document).ready(function () {
+            scoreboard.cardinfo.init();
+
+            setupAutoComplete(
+                document.getElementById("inputCommander"), 
+                scoreboard.cardinfo.autoComplete
+            );
+        });
+    </script>
+  </body>
+</html>
