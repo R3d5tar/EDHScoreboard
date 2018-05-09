@@ -6,9 +6,10 @@ Forked from Badaro. My local EDH playgroup uses it often and likes the basic sco
 - Tracking life totals.
 - Tracking poison counters.
 - Tracking commander damage.
-- State is remembered in your browser, so you won't lose it, when closing your tab/browser or a system crash...
+- Gamestate is remembered in your browser, so you won't lose it, when closing your tab/browser OR when a BSOD occurs.
 - Support for tracking a 2HG EDH match: 
   When playing 2HG EDH you enter a team name and add both commanders. This is a 3 step process, but it works. After change the team life total to something apropriate. Commander damage is still the same.
+- Auto completing cardnames (when choosing a commander)
 
 ## Pending changes for R3d5tar's local playgroup:
 - Support for respawning and tracking deads/kills:
