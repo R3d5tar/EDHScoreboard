@@ -64,7 +64,11 @@ $(document).ready()
             scoreboard.functions.clearAll();
         }
     });
-    
+
+	setupAutoComplete(
+		document.getElementById("inputCommander"), 
+		scoreboard.cardinfo.autoComplete
+	);
     
 	// bootstrap-switch initialization
 	$('#inputInfect').bootstrapSwitch();
