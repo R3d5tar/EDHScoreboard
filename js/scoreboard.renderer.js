@@ -40,6 +40,8 @@ scoreboard.renderer = {
 	{
 		$('#mainContainer').html('');
 
+		this._ensureToggleLogDisplay();
+
 		if(!scoreboard.datastore.hasData()) return;
 	
 		var playerKeys = scoreboard.datastore.getPlayerKeys();
@@ -48,8 +50,6 @@ scoreboard.renderer = {
 		var showCommanderDamage = scoreboard.datastore.isActive("CommanderDamage");
 		var showCommanderImages = scoreboard.datastore.isActive("CommanderImages");
 
-		this._ensureToggleLogDisplay();
-
 		$('#mainContainer').append('<table class="" />');
 		$('#mainContainer table').addClass('table').addClass('table-striped');
 		$('#mainContainer table').append('<thead />');
@@ -57,11 +57,11 @@ scoreboard.renderer = {
 		
 		//setup headers. uesd json properties: name (string), iconClass (string), buttons (bool), clickFunction, commanderName (string) 
 		var headers = [ {name: 'Player', iconClass: "glyphicon-user" }, 
-						{ name: 'Life', iconClass: "glyphicon-tree-deciduous", buttons: true, clickFunction: function(amount){ scoreboard.functions.incrementDamageAll(amount); } } ];
+						{ name: 'Life', iconClass: "glyphicon-tree-deciduous" } ];
 						
 		if (showPoison) 
 		{
-			headers.push({ name: 'Poison', iconClass: "glyphicon-tint", buttons: true, clickFunction: function(amount){ scoreboard.functions.incrementPoisonAll(amount); } });		
+			headers.push({ name: 'Poison', iconClass: "glyphicon-tint" });		
 		}
 		
 		if(showCommanderDamage)
@@ -83,7 +83,7 @@ scoreboard.renderer = {
 		
 			if (typeof(headers[i].commanderName) != 'undefined')
 			{
-				$('#mainContainer table thead tr th:last').append('<button />');
+				$('#mainContainer table thead tr th:last').append('<button />').addClass('cardName');
 				$('#mainContainer table thead tr th:last button')	
 					.addClass('btn btn-default btn-xs')
 					.css('float', 'right')
@@ -412,12 +412,6 @@ scoreboard.renderer = {
 	{
 		$('#removeCommander_' + commanderKey).remove();
 	},
-	
-	appendToLog: function(message)
-	{
-		var currentLog = $('#logContainer textArea').html();
-		$('#logContainer textArea').html(message + '\n' + currentLog);
-	},
 	 
 	promptForAmount: function(callback)
 	{
@@ -430,7 +424,7 @@ scoreboard.renderer = {
 	 
 	_ensureToggleLogDisplay: function()
 	{
-		$('textarea.logDisplay')
+		$('#logDisplay')
 			.toggleClass('hidden', !scoreboard.datastore.isActive("Log"));
  	},
 	

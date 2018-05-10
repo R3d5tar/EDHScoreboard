@@ -24,6 +24,7 @@ Forked from Badaro. My local EDH playgroup uses it often and likes the basic sco
   Implementation should be like poison but without a maximum.
 
 ## Pending improvements:
+- refactor: setDamage => setLife.
 - Improve resposiveness, the layout of some buttons is strange on smaller screens. 
 - Add Footer with Copyright and Contact Info
 

@@ -24,7 +24,10 @@ scoreboard.functions = {
 				scoreboard.renderer.resetAllFormData();
 				scoreboard.renderer.createRemovePlayerButton(result.playerKey);
                 scoreboard.renderer.createRemoveCommanderButton(result.commanderKey);
-				scoreboard.renderer.appendToLog('Added player ' + formData.playerName + 'with commander ' + formData.commanderName);
+				scoreboard.log.write(
+					'{player} joined and plays a <card>{commander}</card>-deck.',
+					{ player: formData.playerName, commander: formData.commanderName }
+				);
 				scoreboard.renderer.redraw();
 			}
 			else
@@ -44,7 +47,8 @@ scoreboard.functions = {
 			{
 				scoreboard.renderer.resetPlayerFormData();
 				scoreboard.renderer.createRemovePlayerButton(result.playerKey);
-				scoreboard.renderer.appendToLog('Added player ' + formData.playerName);
+				scoreboard.log.write('{player} joined this game.', 
+					{ player: formData.playerName });
 				scoreboard.renderer.redraw();
 			}
 			else
@@ -63,7 +67,9 @@ scoreboard.functions = {
 			{
 				scoreboard.renderer.resetCommanderFormData();
 				scoreboard.renderer.createRemoveCommanderButton(result.commanderKey);
-				scoreboard.renderer.appendToLog('Added commander ' + formData.commanderName);
+				scoreboard.log.write('Some-player plays a <card>{commander}</card>-deck.', 
+					{ commander: formData.commanderName }
+				);
 				scoreboard.renderer.redraw();
 			}
 			else
@@ -78,7 +84,7 @@ scoreboard.functions = {
 		var playerName = scoreboard.datastore.getPlayerName(playerKey);
 		scoreboard.datastore.removePlayer(playerKey);
 		scoreboard.renderer.destroyRemovePlayerButton(playerKey);
-		scoreboard.renderer.appendToLog('Removed player ' + playerName);
+		scoreboard.log.write('{player} left this game.', { player: playerName });
 		scoreboard.renderer.redraw();
 	},
 
@@ -87,38 +93,22 @@ scoreboard.functions = {
         var commanderName = scoreboard.datastore.getCommanderName(commanderKey);
 		scoreboard.datastore.removeCommander(commanderKey);
 		scoreboard.renderer.destroyRemoveCommanderButton(commanderKey);
-		scoreboard.renderer.appendToLog('Removed commander ' + commanderName);
+		scoreboard.log.write('The <card>{commander}</card>-deck left this game.', 
+			{ commander: commanderName }
+		);
 		scoreboard.renderer.redraw();
     },
-
-	incrementDamageAll: function(amount)
-	{
-		var playerKeys = scoreboard.datastore.getPlayerKeys();
-		for(var i=0;i<playerKeys.length;i++)
-		{
-			scoreboard.datastore.setDamage(playerKeys[i], scoreboard.datastore.getDamage(playerKeys[i])+amount);
-		}
-		scoreboard.renderer.appendToLog('Applying ' + amount + ' of life to all players');
-		scoreboard.renderer.redrawDamageAll();
-	},
-
-	incrementPoisonAll: function(amount)
-	{
-		var playerKeys = scoreboard.datastore.getPlayerKeys();
-		for(var i=0;i<playerKeys.length;i++)
-		{
-			scoreboard.datastore.setPoison(playerKeys[i], scoreboard.datastore.getPoison(playerKeys[i])+amount);
-		}
-		scoreboard.renderer.appendToLog('Applying ' + amount + ' of poison to all players');
-		scoreboard.renderer.redrawPoisonAll();
-	},
 	
 	incrementDamage: function(playerKey, amount)
 	{
 		var diff = scoreboard.datastore.setDamage(playerKey, scoreboard.datastore.getDamage(playerKey)+amount)!=0;
 		if(diff!=0)
 		{
-			scoreboard.renderer.appendToLog('Applying ' + amount + ' of life to player ' + scoreboard.datastore.getPlayerName(playerKey));
+			scoreboard.log.write('{player} {event} {x} life.', { 
+					player: scoreboard.datastore.getPlayerName(playerKey),
+					event: (amount < 0) ? "lost" : "gained",
+					x: Math.abs(amount)
+				 });
 			scoreboard.renderer.redrawDamage(playerKey);
 		}
 	},
@@ -128,7 +118,11 @@ scoreboard.functions = {
 		var diff = scoreboard.datastore.setPoison(playerKey, scoreboard.datastore.getPoison(playerKey)+amount)!=0;
 		if(diff!=0)
 		{
-			scoreboard.renderer.appendToLog('Applying ' + amount + ' of poison damage to player ' + scoreboard.datastore.getPlayerName(playerKey));
+			scoreboard.log.write('{player} {event} {x} poison counter(s).', { 
+					player: scoreboard.datastore.getPlayerName(playerKey),
+					event: (amount < 0) ? "lost" : "got",
+					x: Math.abs(amount)
+				 });
 			scoreboard.renderer.redrawPoison(playerKey);
 		}
 	},
@@ -138,17 +132,49 @@ scoreboard.functions = {
 		var diff = scoreboard.datastore.setCommanderDamage(playerKey, commanderKey, scoreboard.datastore.getCommanderDamage(playerKey, commanderKey)+amount);
 		if(diff!=0)
 		{
-			scoreboard.renderer.appendToLog('Applying ' + amount + ' of damage from commander ' + scoreboard.datastore.getCommanderName(commanderKey) + ' to player ' + scoreboard.datastore.getPlayerName(playerKey));
 			scoreboard.renderer.redrawCommanderDamage(playerKey, commanderKey);
 
 			if(scoreboard.datastore.getCommanderInfect(commanderKey))
 			{
 				scoreboard.datastore.setPoison(playerKey, scoreboard.datastore.getPoison(playerKey)+diff);
+				
+				if (amount > 0) {
+					scoreboard.log.write(
+						'<card>{commander}</card> dealt {x} damage to {player} in the form of poison counters.', { 
+							player: scoreboard.datastore.getPlayerName(playerKey),
+							commander: scoreboard.datastore.getCommanderName(commanderKey),
+							x: Math.abs(amount)
+						});
+				} else {
+					scoreboard.log.write(
+						'Corrected {x} damage dealt by <card>{commander}</card> to {player} in the form of poison counters.', { 
+							player: scoreboard.datastore.getPlayerName(playerKey),
+							commander: scoreboard.datastore.getCommanderName(commanderKey),
+							x: Math.abs(amount)
+						});
+				}
+
 				scoreboard.renderer.redrawPoison(playerKey);
 			}
 			else
 			{
 				scoreboard.datastore.setDamage(playerKey, scoreboard.datastore.getDamage(playerKey)-diff);
+
+				if (amount > 0) {
+					scoreboard.log.write(
+						'<card>{commander}</card> dealt {x} damage to {player}', { 
+							player: scoreboard.datastore.getPlayerName(playerKey),
+							commander: scoreboard.datastore.getCommanderName(commanderKey),
+							x: Math.abs(amount)
+						});
+				} else {
+					scoreboard.log.write(
+						'Corrected {x} damage dealt by <card>{commander}</card> to {player}', { 
+							player: scoreboard.datastore.getPlayerName(playerKey),
+							commander: scoreboard.datastore.getCommanderName(commanderKey),
+							x: Math.abs(amount)
+						});
+				}
 				scoreboard.renderer.redrawDamage(playerKey);
 			}
 		}
@@ -159,7 +185,10 @@ scoreboard.functions = {
 		var diff = scoreboard.datastore.setDamage(playerKey, amount);
 		if(diff!=0)
 		{
-			scoreboard.renderer.appendToLog('Setting of life to player ' + scoreboard.datastore.getPlayerName(playerKey) + ' to value ' + amount);
+			scoreboard.log.write('{player}\'s life total became {life}.', { 
+					player: scoreboard.datastore.getPlayerName(playerKey),
+					life: Math.abs(amount)
+				});
 			scoreboard.renderer.redrawDamage(playerKey);
 		}
 	},
@@ -169,7 +198,10 @@ scoreboard.functions = {
 		var diff = scoreboard.datastore.setPoison(playerKey, amount);
 		if(diff!=0)
 		{
-			scoreboard.renderer.appendToLog('Set poison damage to player ' + scoreboard.datastore.getPlayerName(playerKey) + ' to value ' + amount);
+			scoreboard.log.write('{player} has {poison} poison counters.', { 
+					player: scoreboard.datastore.getPlayerName(playerKey),
+					poison: amount
+				});
 			scoreboard.renderer.redrawPoison(playerKey);
 		}
 	},
@@ -180,7 +212,12 @@ scoreboard.functions = {
 		if(diff!=0)
 		{
 			scoreboard.datastore.setDamage(playerKey, scoreboard.datastore.getDamage(playerKey)-diff);
-			scoreboard.renderer.appendToLog('Setting damage from commander ' + scoreboard.datastore.getCommanderName(commanderKey) + ' to player ' + scoreboard.datastore.getPlayerName(playerKey) + ' to value ' + amount);
+			scoreboard.log.write(
+				'<card>{commander}</card> has dealt {x} damage to {player} in total.', { 
+					player: scoreboard.datastore.getPlayerName(playerKey),
+					commander: scoreboard.datastore.getCommanderName(commanderKey),
+					x: amount
+				});
 			scoreboard.renderer.redrawDamage(playerKey);
 			scoreboard.renderer.redrawCommanderDamage(playerKey, commanderKey);
 		}
@@ -189,13 +226,13 @@ scoreboard.functions = {
 	newGame: function()
 	{
 		scoreboard.datastore.newGame();
-		scoreboard.renderer.appendToLog('Starting a new game');
+		scoreboard.log.write('Restarted the game OR started a new game. (All life totals, poison counters and commander damage have been reset.)');
 		scoreboard.renderer.redraw();
 	},
 	
     clearAll: function()
     {
-        scoreboard.datastore.clear();
+		scoreboard.datastore.clear();
         scoreboard.renderer.reloadPage();
     },
     

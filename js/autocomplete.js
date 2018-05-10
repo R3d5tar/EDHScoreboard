@@ -28,27 +28,33 @@ function setupAutoComplete(
         var listDiv = document.getElementById(this.id + "-autocomplete-list");
         if (listDiv) //RD: why?
             listDiv = listDiv.getElementsByTagName("div");
-
-        if (e.keyCode == 40) {
-            /*If the arrow DOWN key is pressed,
-            increase the currentFocus variable:*/
-            _currentFocus++;
-            /*and and make the current item more visible:*/
-            addActive(listDiv);
-        } else if (e.keyCode == 38) { //up
-            /*If the arrow UP key is pressed,
-            decrease the currentFocus variable:*/
-            _currentFocus--;
-            /*and and make the current item more visible:*/
-            addActive(listDiv);
-        } else if (e.keyCode == 13) {
-            /*If the ENTER key is pressed, prevent the form from being submitted,*/
-            e.preventDefault();
-            if (_currentFocus > -1) {
-            /*and simulate a click on the "active" item:*/
-            if (listDiv) 
-                listDiv[_currentFocus].click();
-            }
+        var down = 40, up = 38, enter = 13, tab = 9;
+        switch (e.keyCode)
+        {
+            case down:
+                // increase the currentFocus variable:
+                _currentFocus++;
+                addActive(listDiv);
+            break;
+            case down:
+                // increase the currentFocus variable:
+                _currentFocus--;
+                addActive(listDiv);
+            break;
+            case enter:
+            case tab:
+                if (listDiv) {
+                    // when list is active, prevent the form from being submitted
+                    e.preventDefault();
+                    if (_currentFocus > -1) {
+                        // and simulate a click on the active item:
+                        listDiv[_currentFocus].click();
+                    } else if (listDiv.length == 1) {
+                        // and simulate a click on the only item:       
+                        listDiv[0].click();
+                    }
+                }
+            break;
         }
     });
 
