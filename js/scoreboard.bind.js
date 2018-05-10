@@ -75,5 +75,5 @@ $(document).ready()
 	$('#inputInfect').bootstrapSwitch();
 	$('#inputInfect').bootstrapSwitch('toggleAnimate', false);
 
-	scoreboard.log.write('Welcome back! Enjoy your game.')
+	scoreboard.log.write('Welcome back. Enjoy your game!')
 }

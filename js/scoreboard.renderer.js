@@ -83,7 +83,9 @@ scoreboard.renderer = {
 		
 			if (typeof(headers[i].commanderName) != 'undefined')
 			{
-				$('#mainContainer table thead tr th:last').append('<button />').addClass('cardName');
+				$('#mainContainer table thead tr th:last')
+					.addClass('cardName')
+					.append('<button />');
 				$('#mainContainer table thead tr th:last button')	
 					.addClass('btn btn-default btn-xs')
 					.css('float', 'right')
