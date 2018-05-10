@@ -7,6 +7,11 @@
 *		License: https://github.com/Badaro/EDHScoreboard/blob/master/LICENSE
 */
 
+@font-face {
+  font-family: 'Beleren';
+  src: url('https://magarena.github.io/public/css/woff/Beleren.woff') format('woff');
+}
+
 .titleContainer {
   
   -webkit-box-shadow: inset 0 -3px 5px rgba(0,0,0,.1);
@@ -23,8 +28,10 @@
   color: #fff;
 }
 
-.logDisplay {
-	width: 80%
+#logDisplay {
+  min-height: 80px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11pt;
 }
 
 .lifeButton {
@@ -64,7 +71,7 @@ th
 .commanderImage
 {
   margin: auto;
-  width: 135px;
+  width: 120px;
   height: 100px;
   background-repeat: no-repeat;
   background-size: auto 100px;
@@ -72,16 +79,6 @@ th
   background-blend-mode: lighten;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-}
-
-.planeswalker
-{
-  width: 155px;
-}
-
-.classic 
-{
-  width: 120px;
 }
 
 th .commanderImage + h4 
@@ -98,4 +95,8 @@ th button
   position: absolute;
   top: 0px;
   right: 0px;  
+}
+
+.cardName, card {
+  font-family: 'Beleren';
 }

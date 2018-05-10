@@ -12,6 +12,7 @@ $(document).ready()
 	scoreboard.datastore.init();
 	scoreboard.renderer.init();
 	scoreboard.functions.init();
+	scoreboard.log.init($("#log"));
 	scoreboard.cardinfo.init();
 
 	$('#addPlayerButton').click(function()
@@ -73,4 +74,6 @@ $(document).ready()
 	// bootstrap-switch initialization
 	$('#inputInfect').bootstrapSwitch();
 	$('#inputInfect').bootstrapSwitch('toggleAnimate', false);
+
+	scoreboard.log.write('Welcome back! Enjoy your game.')
 }
