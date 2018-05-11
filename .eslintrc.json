@@ -1,10 +1,12 @@
 {
     "env": {
         "browser": true,
-        "jquery": true
+		"jquery": true
     },
     "globals": {
-        "scoreboard": false
+		"scoreboard": false,
+		"bootbox": false,
+		"setupAutoComplete": false
     },
     "extends": "eslint:recommended",
     "rules": {

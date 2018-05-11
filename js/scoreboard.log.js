@@ -1,46 +1,46 @@
 scoreboard.log = function () {
-    var _self = {};
-    _self._dateSpacing = new Date("31/12/2018 23:59").toLocaleString().length;
-    _self._logContainer;
-    _self._defaultPattern = "{time} | {message} <br />";
-    var test = 'test';
+    
+    var _self = {},
+        _logContainer,	
+        _dateSpacing = new Date('31/12/2018 23:59').toLocaleString().length,
+        _defaultPattern = '{time} | {message} <br />';
 
     _self.init = function (logContainer) {
-        this._logContainer = $(logContainer);
-        this._logContainer.empty();
-    }
+        _logContainer = $(logContainer);
+        _logContainer.empty();
+    };
 
 
-    _self.write = function (message, params = null) {
-        var logEnrty = this._defaultPattern
-            .replace("{time}", this.getTimestamp())
-            .replace("{message}", message);
+    _self.write = function (message, params) {
+        var logEnrty = _defaultPattern
+            .replace('{time}', _getTimestamp())
+            .replace('{message}', message);
 
         if (params) {
             for (var key in params) {
                 logEnrty = logEnrty.replace(
                     '{' + key + '}', 
-                    _self.decorate(params[key])
+                    _decorate(params[key])
                 );
             }
         }
 
-        this._logContainer.prepend(logEnrty);
+        _logContainer.prepend(logEnrty);
     };
 
-    _self.getTimestamp = function () {
+    function _getTimestamp() {
         var stamp = new Date().toLocaleString();
 
-        var extraSpacing = this._dateSpacing - stamp;
+        var extraSpacing = _dateSpacing - stamp;
         for (var i = 0; i < extraSpacing; i++) {
-            now = " " + stamp;
+            stamp = ' ' + stamp;
         }
         return stamp;
-    };
+    }
 
-    _self.decorate = function (text) {
-        return "<span>" + text + "</span>";
-    };
+    function _decorate(text) {
+        return '<span>' + text + '</span>';
+    }
 
     return _self;
 }();

@@ -7,14 +7,16 @@
 *		License: https://github.com/Badaro/EDHScoreboard/blob/master/LICENSE
 */
 
-scoreboard.functions = {
+scoreboard.functions = function () {
+    
+    var datastore = scoreboard.datastore,
+        renderer = scoreboard.renderer,
+        log = scoreboard.log,
+        _self = {};
 
-    init: function () {},
+    _self.init = function () {};
 
-    addPlayerWithCommander: function () {
-        var datastore = scoreboard.datastore,
-            renderer = scoreboard.renderer,
-            log = scoreboard.log;
+    _self.addPlayerWithCommander = function () {
 
         var formData = renderer.getAllFormData();
         if (formData.playerName != '' && formData.commanderName != '') {
@@ -32,12 +34,9 @@ scoreboard.functions = {
                 renderer.showGeneralError(result.message);
             }
         }
-    },
+    };
 
-    addPlayer: function () {
-        var datastore = scoreboard.datastore,
-            renderer = scoreboard.renderer,
-            log = scoreboard.log;
+    _self.addPlayer = function () {
 
         var formData = renderer.getPlayerFormData();
         if (formData.playerName != '') {
@@ -53,10 +52,7 @@ scoreboard.functions = {
         }
     },
 
-    addCommander: function () {
-        var datastore = scoreboard.datastore,
-            renderer = scoreboard.renderer,
-            log = scoreboard.log;
+    _self.addCommander = function () {
 
         var formData = renderer.getCommanderFormData();
         if (formData.commanderName != '') {
@@ -72,7 +68,7 @@ scoreboard.functions = {
         }
     },
 
-    removePlayer: function (playerKey) {
+    _self.removePlayer = function (playerKey) {
         var datastore = scoreboard.datastore,
             renderer = scoreboard.renderer,
             log = scoreboard.log;
@@ -84,10 +80,7 @@ scoreboard.functions = {
         renderer.redraw();
     },
 
-    removeCommander: function (commanderKey) {
-        var datastore = scoreboard.datastore,
-            renderer = scoreboard.renderer,
-            log = scoreboard.log;
+    _self.removeCommander = function (commanderKey) {
 
         var commanderName = datastore.getCommanderName(commanderKey);
         datastore.removeCommander(commanderKey);
@@ -96,10 +89,7 @@ scoreboard.functions = {
         renderer.redraw();
     },
 
-    incrementDamage: function (playerKey, amount) {
-        var datastore = scoreboard.datastore,
-            renderer = scoreboard.renderer,
-            log = scoreboard.log;
+    _self.incrementDamage = function (playerKey, amount) {
 
         var diff = datastore.setDamage(playerKey, datastore.getDamage(playerKey) + amount) != 0;
         if (diff != 0) {
@@ -116,10 +106,7 @@ scoreboard.functions = {
         }
     },
 
-    incrementPoison: function (playerKey, amount) {
-        var datastore = scoreboard.datastore,
-            renderer = scoreboard.renderer,
-            log = scoreboard.log;
+    _self.incrementPoison = function (playerKey, amount) {
 
         var diff = datastore.setPoison(playerKey, datastore.getPoison(playerKey) + amount) != 0;
         if (diff != 0) {
@@ -136,10 +123,7 @@ scoreboard.functions = {
         }
     },
 
-    incrementCommanderDamage: function (playerKey, commanderKey, amount) {
-        var datastore = scoreboard.datastore,
-            renderer = scoreboard.renderer,
-            log = scoreboard.log;
+    _self.incrementCommanderDamage = function (playerKey, commanderKey, amount) {
 
         var diff = datastore.setCommanderDamage(playerKey, commanderKey, datastore.getCommanderDamage(playerKey, commanderKey) + amount);
         if (diff != 0) {
@@ -176,12 +160,9 @@ scoreboard.functions = {
                 renderer.redrawDamage(playerKey);
             }
         }
-    },
+    };
 
-    setDamage: function (playerKey, amount) {
-        var datastore = scoreboard.datastore,
-            renderer = scoreboard.renderer,
-            log = scoreboard.log;
+    _self.setDamage = function (playerKey, amount) {
 
         var diff = datastore.setDamage(playerKey, amount);
         if (diff != 0) {
@@ -193,12 +174,9 @@ scoreboard.functions = {
 
             renderer.redrawDamage(playerKey);
         }
-    },
+    };
 
-    setPoison: function (playerKey, amount) {
-        var datastore = scoreboard.datastore,
-            renderer = scoreboard.renderer,
-            log = scoreboard.log;
+    _self.setPoison = function (playerKey, amount) {
 
         var diff = datastore.setPoison(playerKey, amount);
         if (diff != 0) {
@@ -210,12 +188,9 @@ scoreboard.functions = {
 
             renderer.redrawPoison(playerKey);
         }
-    },
+    };
 
-    setCommanderDamage: function (playerKey, commanderKey, amount) {
-        var datastore = scoreboard.datastore,
-            renderer = scoreboard.renderer,
-            log = scoreboard.log;
+    _self.setCommanderDamage = function (playerKey, commanderKey, amount) {
 
         var diff = datastore.setCommanderDamage(playerKey, commanderKey, amount);
         if (diff != 0) {
@@ -233,47 +208,40 @@ scoreboard.functions = {
         }
     },
 
-    newGame: function () {
-        var datastore = scoreboard.datastore,
-            renderer = scoreboard.renderer,
-            log = scoreboard.log;
+    _self.newGame = function () {
 
         datastore.newGame();
         log.write('Restarted the game OR started a new game. (All life totals, poison counters and ' +
                 'commander damage have been reset.)');
         renderer.redraw();
-    },
+    };
 
-    clearAll: function () {
-        var datastore = scoreboard.datastore,
-            renderer = scoreboard.renderer;
+    _self.clearAll = function () {
 
         datastore.clear();
         renderer.reloadPage();
-    },
+    };
 
-    toggleLogDisplay: function () {
-        this._toggleAndRedraw('Log');
-    },
+    _self.toggleLogDisplay = function () {
+        _toggleAndRedraw('Log');
+    };
 
-    toggleImageDisplay: function () {
-        this._toggleAndRedraw('CommanderImages');
-    },
+    _self.toggleImageDisplay = function () {
+        _toggleAndRedraw('CommanderImages');
+    };
 
-    toggleCommanderDamageDisplay: function () {
-        this._toggleAndRedraw('CommanderDamage');
-    },
+    _self.toggleCommanderDamageDisplay = function () {
+        _toggleAndRedraw('CommanderDamage');
+    };
 
-    togglePoisonDisplay: function () {
-        this._toggleAndRedraw('Poison');
-    },
+    _self.togglePoisonDisplay = function () {
+        _toggleAndRedraw('Poison');
+    };
 
-    _toggleAndRedraw: function (name) {
-        var datastore = scoreboard.datastore,
-            renderer = scoreboard.renderer;
-
+    function _toggleAndRedraw (name) {
         datastore.toggle(name);
         renderer.redraw();
     }
-    
-};
+
+    return _self;
+}();

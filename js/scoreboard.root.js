@@ -7,4 +7,4 @@
 *		License: https://github.com/Badaro/EDHScoreboard/blob/master/LICENSE
 */
 
-var scoreboard = {};
+var scoreboard = {}; // eslint-disable-line no-unused-vars
