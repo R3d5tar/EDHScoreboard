@@ -31,6 +31,7 @@ scoreboard.renderer = {
         this._ensureToggleState('#showHideImagesButton', 'CommanderImages');
         this._ensureToggleState('#showHideLogButton', 'Log');
         this._ensureToggleLogDisplay();
+        this.ensureOnlineState();
 
         this.redraw();
     },
@@ -463,6 +464,13 @@ scoreboard.renderer = {
 
     _ensureToggleLogDisplay: function () {
         $('#logDisplay').toggleClass('hidden', !scoreboard.datastore.isActive('Log'));
+    },
+
+    ensureOnlineState: function () {
+        var gamecode = scoreboard.datastore.getGamecode();
+        $('#connectToBackend').toggleClass('hidden', !!gamecode);
+        $('#showGamecode').toggleClass('hidden', !gamecode);
+        $('#gamecode').html(gamecode);
     },
 
     getCommanderFormData: function () {

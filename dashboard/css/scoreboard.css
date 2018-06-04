@@ -100,3 +100,31 @@ th button
 .cardName, card {
   font-family: 'Beleren';
 }
+
+#connectToBackend {
+	float: right;
+}
+
+#connectToBackend button {
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+    margin-top: 20px;
+}
+
+#showGamecode {
+	float: right;
+	color: white;
+	background: #5cb85c;
+	width: 150px;
+	text-align: center;
+	border: 1px solid #4cae4c;
+	border-right: none;
+	border-top-left-radius: 6px;
+	border-bottom-left-radius: 6px;
+}
+
+#showGamecode p {
+	border-top-left-radius: 6px;
+	border-bottom: 1px solid white;
+	background: #4cae4c;
+}

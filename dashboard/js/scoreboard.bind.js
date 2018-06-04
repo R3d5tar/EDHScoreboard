@@ -67,6 +67,10 @@ $(document)
             }
         });
 
+        $('#goOnline').click(function () {
+            functions.goOnline();
+        });
+
         setupAutoComplete(document.getElementById('inputCommander'), scoreboard.cardinfo.autoComplete);
 
         $('#inputInfect').bootstrapSwitch();

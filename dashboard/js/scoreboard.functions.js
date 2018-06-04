@@ -12,6 +12,7 @@ scoreboard.functions = function () {
     var datastore = scoreboard.datastore,
         renderer = scoreboard.renderer,
         log = scoreboard.log,
+        settings = scoreboard.settings,
         _self = {};
 
     _self.init = function () {};
@@ -242,6 +243,18 @@ scoreboard.functions = function () {
         datastore.toggle(name);
         renderer.redraw();
     }
+
+    _self.goOnline = function () {
+        
+        //TODO: get actual Gamecode.
+        var gamecode = 'TEST!';
+        datastore.setGamecode(gamecode);
+        log.write('Registered game online. Players can join by browsing to {url} or using code {code}.', {
+            code: gamecode,
+            url: settings.playerBaseUrl + '#' + gamecode
+        });
+        renderer.ensureOnlineState();
+    };
 
     return _self;
 }();

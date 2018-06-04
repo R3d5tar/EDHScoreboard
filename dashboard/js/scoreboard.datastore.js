@@ -242,6 +242,19 @@ scoreboard.datastore = {
 
     toggle: function (toggleKey) {
         this.setToggle(toggleKey, !this.isActive(toggleKey));
+    },  
+
+    clearGamecode: function () {
+        this.setGamecode(null);
+    },
+
+    setGamecode: function (code) {
+        this._store.gamecode = code;
+        this.save();
+    },
+
+    getGamecode: function () {
+        return this._store.gamecode;
     },
 
     newGame: function () {
@@ -308,6 +321,7 @@ scoreboard.datastore = {
             upgradedDataV3.commanders = data.commanders;
             data = upgradedDataV3;
         }
+
         return data;
     }
 };

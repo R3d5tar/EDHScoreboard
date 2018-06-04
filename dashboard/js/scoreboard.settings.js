@@ -22,5 +22,7 @@ scoreboard.settings = {
     minCommanderDamage: 0,
     maxCommanderDamage: 21,
     minCommanderDamageDisplay: 0,
-    maxCommanderDamageDisplay: 21
+    maxCommanderDamageDisplay: 21,
+    backendBaseUrl: 'https://localhost:5001/',
+    playerBaseUrl: 'https://localhost:5001/mobile/'
 };
