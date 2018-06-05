@@ -128,3 +128,7 @@ th button
 	border-bottom: 1px solid white;
 	background: #4cae4c;
 }
+
+#showGamecode h1 {
+	font-family: 'Beleren';
+}

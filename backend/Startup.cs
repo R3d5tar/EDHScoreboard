@@ -3,6 +3,7 @@ using EDHScoreboard.Backend.Model.Internal;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -10,11 +11,27 @@ namespace EDHScoreboard.Backend
 {
 	public class Startup
     {
+		private const string CorsPolicyName = "CorsPolicy";
+		public IConfiguration Configuration { get; }
+		public AppConfiguration App { get; } = new AppConfiguration();
+
+		public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+			Configuration.GetSection("App").Bind(App);
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services
-				.AddMvc()
-				.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+			//add Cors Policy
+			services.AddCors(options => options.AddPolicy(CorsPolicyName,
+				builder => builder
+					.AllowAnyMethod()
+					.AllowAnyHeader()
+					.WithOrigins(App.AllowedCorsOrigins))
+			);
 
 			// default uri: /swagger
 			services.AddSwaggerGen(c => c.SwaggerDoc("v1", 
@@ -36,11 +53,12 @@ namespace EDHScoreboard.Backend
             }
 
 			app.UseHttpsRedirection();
+			app.UseCors(CorsPolicyName);
 
 			app.UseSwagger();
 			app.UseSwaggerUI(c =>
 			{
-				c.SwaggerEndpoint("/swagger/v1/swagger.json", "EDHScoreboard - Backend API / V1");
+				c.SwaggerEndpoint("/swagger/v1/swagger.json", "EDHScoreboard - Backend API / v1");
 			});
 
             app.UseMvc();			

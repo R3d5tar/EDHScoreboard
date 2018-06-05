@@ -52,22 +52,20 @@ namespace EDHScoreboard.Backend.Controllers
         [HttpDelete("{code}")]
 		[ProducesResponseType(204)]
 		[ProducesResponseType(404)]
-        public void Delete(string code, [FromHeader] string secret)
+        public ActionResult Delete(string code, [FromHeader] string secret)
         {
 			if (!_games.TryGetValue(code, out var foundGame)) {
-				NotFound();
-				return;
+				return NotFound();
 			}
 
 			if (secret == null || foundGame.Secret != secret)
 			{
-				NotFound();
-				return;
+				return NotFound();
 			}
 			else
 			{
 				_games.Remove(code);
-				NoContent();
+				return NoContent();
 			}
         }
 

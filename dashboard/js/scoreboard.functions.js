@@ -12,7 +12,7 @@ scoreboard.functions = function () {
     var datastore = scoreboard.datastore,
         renderer = scoreboard.renderer,
         log = scoreboard.log,
-        settings = scoreboard.settings,
+        backendclient = scoreboard.backendclient,
         _self = {};
 
     _self.init = function () {};
@@ -245,15 +245,27 @@ scoreboard.functions = function () {
     }
 
     _self.goOnline = function () {
-        
-        //TODO: get actual Gamecode.
-        var gamecode = 'TEST!';
-        datastore.setGamecode(gamecode);
-        log.write('Registered game online. Players can join by browsing to {url} or using code {code}.', {
-            code: gamecode,
-            url: settings.playerBaseUrl + '#' + gamecode
+        backendclient.registerGame(datastore.getPlayerNames(), function (response) {
+            datastore.setOnlineConnection(response.code, response.secret);
+            log.write('Registered game online. Players can join by browsing to {url} or using code {code}.', {
+                code: response.code,
+                url: scoreboard.environment.playerBaseUrl + '#' + response.code
+            });
+            renderer.ensureOnlineState();
+        }, function (error) {
+            log.write('Failed registering the game online. Details: {code}: {msg}', {code: error.status, msg: error.responseText});
         });
-        renderer.ensureOnlineState();
+    };
+
+    _self.goOffline = function () {
+        if (datastore.isOnline()) {
+            //the client just asume that this succeeds 
+            // (if not that's a problem for the server, not the client). 
+            backendclient.unregisterGame(datastore.getOnlineGamecode(), datastore.getOnlineSecret());
+            datastore.clearOnlineConnection();
+            log.write('Disconnected from online synchronization');
+            renderer.ensureOnlineState();
+        }
     };
 
     return _self;

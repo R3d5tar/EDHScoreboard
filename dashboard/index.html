@@ -41,7 +41,7 @@
 			</h1>
 
 			<div id="connectToBackend">
-				<button id="goOnline" type="button" class="btn btn-success btn-lg">
+				<button id="goOnlineButton" type="button" class="btn btn-success btn-lg">
 					<span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
 					&nbsp;Go Online
 				</button>
@@ -151,7 +151,11 @@
                         <button id="newGameButton" type="button" class="btn btn-default">
                             <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                             Start New Game
-                        </button>
+						</button>
+						<button id="goOfflineButton" type="button" class="btn btn-default">
+							<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+							Go Offline
+						</button>
                         <button id="resetAllButton" type="button" class="btn btn-default">
                             <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
                             Clear All
@@ -231,8 +235,9 @@
     <script src="js/scoreboard.datastore.js"></script>
     <script src="js/scoreboard.renderer.js"></script>
     <script src="js/scoreboard.log.js"></script>
-    <script src="js/scoreboard.functions.js"></script>
-    <script src="js/scoreboard.cardinfo.scryfall.js"></script>
+	<script src="js/scoreboard.backendclient.js"></script>
+	<script src="js/scoreboard.functions.js"></script>
+	<script src="js/scoreboard.cardinfo.scryfall.js"></script>
     <script src="js/scoreboard.bind.js"></script>
 </body>
 

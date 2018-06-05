@@ -158,6 +158,14 @@ scoreboard.datastore = {
         return result;
     },
 
+    getPlayerNames: function () {
+        var result = [];
+        for (var playerKey in this._store.players) {
+            result.push(this._store.players[playerKey].playerName);
+        }
+        return result;
+    },
+
     getPlayerName: function (playerKey) {
         return this._store.players[playerKey].playerName;
     },
@@ -244,17 +252,26 @@ scoreboard.datastore = {
         this.setToggle(toggleKey, !this.isActive(toggleKey));
     },  
 
-    clearGamecode: function () {
-        this.setGamecode(null);
+    clearOnlineConnection: function () {
+        this.setOnlineConnection(null, null);
     },
 
-    setGamecode: function (code) {
+    setOnlineConnection: function (code, secret) {
         this._store.gamecode = code;
+        this._store.secret = secret;
         this.save();
     },
 
-    getGamecode: function () {
+    getOnlineGamecode: function () {
         return this._store.gamecode;
+    },
+
+    getOnlineSecret: function () {
+        return this._store.secret;
+    },
+
+    isOnline: function () {
+        return !!this._store.gamecode;
     },
 
     newGame: function () {

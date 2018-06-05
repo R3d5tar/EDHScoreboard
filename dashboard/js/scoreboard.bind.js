@@ -67,8 +67,14 @@ $(document)
             }
         });
 
-        $('#goOnline').click(function () {
+        $('#goOnlineButton').click(function () {
             functions.goOnline();
+        });
+
+        $('#goOfflineButton').click(function () {
+            if (confirm('You will lose the active connection and the connection cannot be restored. Are you sure?' )) {
+                functions.goOffline();
+            }
         });
 
         setupAutoComplete(document.getElementById('inputCommander'), scoreboard.cardinfo.autoComplete);

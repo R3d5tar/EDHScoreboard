@@ -467,10 +467,9 @@ scoreboard.renderer = {
     },
 
     ensureOnlineState: function () {
-        var gamecode = scoreboard.datastore.getGamecode();
-        $('#connectToBackend').toggleClass('hidden', !!gamecode);
-        $('#showGamecode').toggleClass('hidden', !gamecode);
-        $('#gamecode').html(gamecode);
+        $('#connectToBackend').toggleClass('hidden', scoreboard.datastore.isOnline());
+        $('#showGamecode').toggleClass('hidden', !scoreboard.datastore.isOnline());
+        $('#gamecode').html(scoreboard.datastore.getOnlineGamecode());
     },
 
     getCommanderFormData: function () {
