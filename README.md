@@ -11,6 +11,7 @@ Forked from Badaro. My local EDH playgroup uses it often and likes the basic sco
 * Support for tracking a 2HG EDH match:
   When playing 2HG EDH you enter a team name and add both commanders. This is a 3 step process, but it works. After change the team life total to something apropriate. Commander damage is still the same.
 * Auto completing cardnames (when choosing a commander)
+* [WIP] Multi-device score keeping
 
 ## Pending changes for R3d5tar's local playgroup:
 
@@ -39,3 +40,41 @@ Forked from Badaro. My local EDH playgroup uses it often and likes the basic sco
 * Add Mana Counters
 * Add Turn Counters
 * Add Game Timer
+
+# Build & Run
+
+Note that this project uses various different technoligies. Most of it is client side code, and the project started from a no compilation standpoint. Each component has it's own manual for now.
+
+## Dashboard
+
+Compilation is not needed. Just host in simple webserver and you are ready to go.
+
+If you have NPM installed (5.2.0 or newer):
+```cmd
+npx http-server
+```
+Navigate to https://127.0.0.1:8080/dashboard
+
+--OR--
+
+Use [Web Server for Chrome](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb) and choose your EDHScoreboard folder. Navigate to http://127.0.0.1:8887/dashboard
+
+Configuration settings can be found in EDHScoreboard/dashboard/js/scoreboard.settings.js.
+
+NB. The Go Online feature requires the backend.
+
+## Backend
+
+The backend is a ASP.Net Core 2.1 application. It requires that you have installed [Microsoft .Net Core SDK 2.1.x](https://www.microsoft.com/net/download).
+
+Running the application using CLI:
+```cmd
+cd backend
+dotnet run backend
+```
+
+Navigate to http://localhost:5000/swagger or https://localhost:5001/swagger to get to the Swagger UI.
+
+This includes building use `dotnet build` to compile but not run/host the project.
+
+Using Visual Studio Code, hitting `F5` should be enough to start a debugging session.
