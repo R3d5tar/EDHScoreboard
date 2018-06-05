@@ -78,3 +78,15 @@ Navigate to http://localhost:5000/swagger or https://localhost:5001/swagger to g
 This includes building use `dotnet build` to compile but not run/host the project.
 
 Using Visual Studio Code, hitting `F5` should be enough to start a debugging session.
+
+## HUD
+
+The 'hud' is the single player view on the game. When connected to a remote game, updates are synchronized.
+
+This is like dashboard client only software, a simple webserver can host it, but this time compilation is needed because it's build on top of React. Use NPM to install dependencies and use npm to compile and run it.
+
+```cmd
+cd /hud
+npm install
+npm start
+```
