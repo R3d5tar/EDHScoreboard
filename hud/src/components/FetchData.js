@@ -1,3 +1,4 @@
+//TODO: clean up (temporary for example/reference purpose)
 import React, {Component} from 'react';
 
 export class FetchData extends Component {

@@ -1,4 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap.css';  //TODO: upgrade to 4.1??
 import 'bootstrap/dist/css/bootstrap-theme.css';
 import './index.css';
 import React from 'react';
