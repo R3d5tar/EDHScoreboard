@@ -30,6 +30,7 @@ namespace EDHScoreboard.Backend
 				builder => builder
 					.AllowAnyMethod()
 					.AllowAnyHeader()
+					.AllowCredentials()
 					.WithOrigins(App.AllowedCorsOrigins))
 			);
 
@@ -37,6 +38,8 @@ namespace EDHScoreboard.Backend
 			services.AddSwaggerGen(c => c.SwaggerDoc("v1", 
 				new Info { Title = "EDHScoreboard - Backend API", Version = "v1" })
 			);
+
+			services.AddSignalR();
 
 			services.AddSingleton<Dictionary<string, GameAdministration>>();
         }
@@ -52,8 +55,12 @@ namespace EDHScoreboard.Backend
                 app.UseHsts();
             }
 
-			app.UseHttpsRedirection();
+			//app.UseHttpsRedirection();
 			app.UseCors(CorsPolicyName);
+			app.UseSignalR(routes =>
+            {
+                routes.MapHub<Hubs.MsgHub>("/msgHub");
+            });
 
 			app.UseSwagger();
 			app.UseSwaggerUI(c =>

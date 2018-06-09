@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import MessageHubManager from './MessageHubManager';
 
 export class Home extends Component {
   displayName = Home.name
@@ -10,6 +11,7 @@ export class Home extends Component {
         <p>This is a &apos;Heads-Up-Display&apos; for your commander game. Use this
           &apos;app&apos; to track your life total or connect to a remote EDH Scoreboard
           to sync your life with it.</p>
+        <MessageHubManager/>
       </div>
     );
   }
