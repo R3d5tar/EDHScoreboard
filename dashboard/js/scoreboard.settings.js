@@ -24,8 +24,3 @@ scoreboard.settings = {
     minCommanderDamageDisplay: 0,
     maxCommanderDamageDisplay: 21
 };
-
-scoreboard.environment = {
-    backendBaseUrl: 'https://localhost:5001/',
-    playerBaseUrl: document.location.origin + '/mobile/'
-};
