@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EDHScoreboard.Backend.Model.Internal;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,7 +32,7 @@ namespace EDHScoreboard.Backend
 					.AllowAnyMethod()
 					.AllowAnyHeader()
 					.AllowCredentials()
-					.WithOrigins(App.AllowedCorsOrigins))
+					.WithOrigins(App.BuildAllowedCorsOrigins()))
 			);
 
 			// default uri: /swagger
