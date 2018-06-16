@@ -4,56 +4,51 @@ export class MessageHub {
   stateChangeFunctions = [];
   msgHubState = 'build';
   connection = null;
-  
+  initialized = null;
+
   constructor() {
-    this.connection = new signalR
-      .HubConnectionBuilder()
-      .withUrl('http://' + document.location.hostname + ':5002/msgHub') //TODO: use make configura
-      .build();
+    this.initialized = fetch('/env.json')
+      .then(response => response.json())
+      .then((env) => this.connection = new signalR.HubConnectionBuilder().withUrl(env.backendUrl + '/msgHub').build());
   }
 
   connect() {
-    const _self = this;
     return this
-      .connection
-      .start()
-      .then(function () {
-        _self.internalSetState('connected');
-      })
-      .catch(function (err) {
-        _self.handleError(err);
+      .initialized
+      .then(() => {
+        return this
+          .connection
+          .start()
+          .then(() => this.internalSetState('connected'))
+          .catch((err) => this.handleError(err));
       });
-    
+
   }
 
   disconnect() {
-    const _self = this;
     return this
-      .connection
-      .stop()
-      .then(function () { 
-        _self.internalSetState('disconnected');
-      })
-      .catch(function (err) {
-        _self.handleError(err);
+      .initialized
+      .then(() => {
+        return this
+          .connection
+          .stop()
+          .then(() => this.internalSetState('disconnected'))
+          .catch((err) => this.handleError(err));
       });
-    
   }
 
   invoke(...args) {
-    const _self = this;
     return this
-      .connection
-      .invoke(...args)
-      .catch(function (err) {
-        _self.handleError(err);
-      });
+      .initialized
+      .then(() => this.connection.invoke(...args).catch((err) => {
+        this.handleError(err);
+      }));
   }
 
   on(actionName, delegateFunction) {
     return this
-      .connection
-      .on(actionName, delegateFunction);
+      .initialized
+      .then(() => this.connection.on(actionName, delegateFunction));
   }
 
   onStateChange(delegateFunction) {
