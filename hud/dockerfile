@@ -1,0 +1,9 @@
+FROM node AS build
+WORKDIR /src
+COPY . .
+RUN npm install
+RUN npm build
+
+FROM nginx AS final
+COPY --from=build /src/build /usr/share/nginx/html
+CMD /bin/bash -c "envsubst < /usr/share/nginx/html/env.json.template > /usr/share/nginx/html/env.json && exec nginx -g 'daemon off;'"

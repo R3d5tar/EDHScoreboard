@@ -43,7 +43,7 @@ scoreboard.backendclient = function () {
     };
 
     function _getGameUrl(code) {
-        var result = backendBaseUrl + 'api/Games';
+        var result = backendBaseUrl + '/api/Games';
         if (code) {
             result += '/' + code;
         }
