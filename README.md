@@ -53,7 +53,7 @@ If you have NPM installed (5.2.0 or newer):
 ```cmd
 npx http-server
 ```
-Navigate to https://127.0.0.1:8080/dashboard
+Navigate to http://127.0.0.1:8080/dashboard
 
 --OR--
 
