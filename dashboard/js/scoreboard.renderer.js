@@ -45,6 +45,8 @@ scoreboard.renderer = {
     redraw: function () {
         var i, j;
 
+        this._ensureToggleLogDisplay();
+
         $('#mainContainer').html('');
 
         if (!scoreboard.datastore.hasData()) 
