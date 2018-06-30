@@ -1,4 +1,4 @@
 scoreboard.environment = {
-    backendBaseUrl: 'https://localhost:5001',
-    hudBaseUrl: document.location.origin + '/mobile'
+    backendBaseUrl: 'http://localhost:5000',
+    hudBaseUrl: 'http://localhost:3000'
 };

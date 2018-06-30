@@ -149,7 +149,11 @@ scoreboard.renderer = {
             $('#mainContainer table tbody tr:last').append('<td />');
             $('#mainContainer table tbody tr:last td:last').append('<h2 />');
             $('#mainContainer table tbody tr:last td:last h2').html(scoreboard.datastore.getPlayerName(playerKeys[i]));
-
+            if (scoreboard.datastore.isOnline()) {
+                $('#mainContainer table tbody tr:last td:last').toggleClass(
+                    'success', scoreboard.datastore.isPlayerConnected(playerKeys[i])
+                );
+            }
             $('#mainContainer table tbody tr:last td:last').append('<button />');
             $('#mainContainer table tbody tr:last td:last button:last')
                 .addClass('btn btn-default btn-xs')

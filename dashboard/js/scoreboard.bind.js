@@ -13,13 +13,19 @@ $(document)
             cardinfo = scoreboard.cardinfo,
             renderer = scoreboard.renderer,
             log = scoreboard.log,
-            functions = scoreboard.functions;
+            functions = scoreboard.functions,
+            backendclient = scoreboard.backendclient,
+            hub = scoreboard.backendclient.hub;
 
         cardinfo.init();
         datastore.init();
         log.init($('#log'));
         renderer.init();
         functions.init();
+        backendclient.init(
+            datastore.getOnlineGamecode(), 
+            datastore.getOnlineSecret()
+        );
 
         $('#addPlayerButton').click(function () {
             functions.addPlayer();
@@ -75,6 +81,16 @@ $(document)
             if (confirm('You will lose the active connection and the connection cannot be restored. Are you sure?' )) {
                 functions.goOffline();
             }
+        });
+
+        hub.on('PlayerConnected', function (name, newPlayer) {
+            if (newPlayer)
+                functions.addPlayer(name);
+            functions.setPlayerConnection(name, true);
+        });
+
+        hub.on('PlayerDisconnected', function (name) {
+            functions.setPlayerConnection(name, false);
         });
 
         setupAutoComplete(document.getElementById('inputCommander'), scoreboard.cardinfo.autoComplete);

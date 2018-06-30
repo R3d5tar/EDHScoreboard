@@ -150,6 +150,16 @@ scoreboard.datastore = {
         return result;
     },
 
+    findPlayerKey: function (playerName) {
+        for (var playerKey in this._store.players) {
+            var player = this._store.players[playerKey];
+            if (player.playerName == playerName) {
+                return playerKey;
+            }
+        }
+        return null;
+    },
+
     getCommanderKeys: function () {
         var result = [];
         for (var commanderKey in this._store.commanders) {
@@ -272,6 +282,16 @@ scoreboard.datastore = {
 
     isOnline: function () {
         return !!this._store.gamecode;
+    },
+
+    setPlayerConnection: function (playerKey, connected) {
+        var player = this._store.players[playerKey];
+        player.connected = connected;
+    },
+
+    isPlayerConnected: function (playerKey) {
+        var player = this._store.players[playerKey];
+        return !!player.connected;
     },
 
     newGame: function () {

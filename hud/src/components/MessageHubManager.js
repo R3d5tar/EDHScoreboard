@@ -5,7 +5,12 @@ export default class MessageHubManager extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {counter: 0, msgHubState: '???', name:'', code: ''};
+    this.state = {
+      counter: 0, 
+      msgHubState: '???', 
+      name:'', 
+      code: document.location.hash ? document.location.hash.substring(1) : ''
+    };
 
     msgHub.onStateChange(this.stateChanged.bind(this));
     msgHub.on('PlayerConnected', this.playerConnected.bind(this));

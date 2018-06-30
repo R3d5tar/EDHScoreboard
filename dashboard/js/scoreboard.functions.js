@@ -8,7 +8,7 @@
 */
 
 scoreboard.functions = function () {
-    
+
     var datastore = scoreboard.datastore,
         renderer = scoreboard.renderer,
         log = scoreboard.log,
@@ -50,6 +50,17 @@ scoreboard.functions = function () {
             } else {
                 renderer.showExistingPlayerFormError();
             }
+        }
+    },
+
+    _self.addPlayer = function (name) {
+        var result = datastore.addPlayer(name);
+        if (result.success) {
+            renderer.createRemovePlayerButton(result.playerKey);
+            log.write('{player} joined this game.', {player: name});
+            renderer.redraw();
+        } else {
+            log.write('Error when registering {player}', {player: name});
         }
     },
 
@@ -239,33 +250,49 @@ scoreboard.functions = function () {
         _toggleAndRedraw('Poison');
     };
 
-    function _toggleAndRedraw (name) {
+    function _toggleAndRedraw(name) {
         datastore.toggle(name);
         renderer.redraw();
     }
 
     _self.goOnline = function () {
-        backendclient.registerGame(datastore.getPlayerNames(), function (response) {
-            datastore.setOnlineConnection(response.code, response.secret);
-            log.write('Registered game online. Players can join by browsing to {url} or using code {code}.', {
-                code: response.code,
-                url: scoreboard.environment.playerBaseUrl + '#' + response.code
+        backendclient
+            .registerGame(datastore.getPlayerNames(), function (response) {
+                datastore.setOnlineConnection(response.code, response.secret);
+                log.write('Registered game online. Players can join by browsing to {url} or using code {code}.', {
+                    code: response.code,
+                    url: scoreboard.environment.hudBaseUrl + '#' + response.code
+                });
+                renderer.ensureOnlineState();
+            }, function (error) {
+                log.write('Failed registering the game online. Details: {code}: {msg}', {
+                    code: error.status,
+                    msg: error.responseText
+                });
             });
-            renderer.ensureOnlineState();
-        }, function (error) {
-            log.write('Failed registering the game online. Details: {code}: {msg}', {code: error.status, msg: error.responseText});
-        });
     };
 
     _self.goOffline = function () {
         if (datastore.isOnline()) {
-            //the client just asume that this succeeds 
-            // (if not that's a problem for the server, not the client). 
+            // the client just asume that this succeeds (if not that's a problem for the
+            // server, not the client).
             backendclient.unregisterGame(datastore.getOnlineGamecode(), datastore.getOnlineSecret());
             datastore.clearOnlineConnection();
             log.write('Disconnected from online synchronization');
             renderer.ensureOnlineState();
         }
+    };
+
+    _self.setPlayerConnection = function (playerName, connected) {
+        var playerKey = datastore.findPlayerKey(playerName);
+        datastore.setPlayerConnection(playerKey, connected);
+        log.write('{player} is now {state}', {
+            player: playerName,
+            state: connected
+                ? 'online'
+                : 'offline'
+        });
+        renderer.redraw();
     };
 
     return _self;

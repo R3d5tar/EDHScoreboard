@@ -6,7 +6,8 @@
     "globals": {
 		"scoreboard": false,
 		"bootbox": false,
-		"setupAutoComplete": false
+        "setupAutoComplete": false,
+        "signalR": false
     },
     "extends": "eslint:recommended",
     "rules": {
