@@ -28,7 +28,7 @@ $(document)
         );
 
         $('#addPlayerButton').click(function () {
-            functions.addPlayer();
+            functions.addPlayerFromUI();
             return false;
         });
 

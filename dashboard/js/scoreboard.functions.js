@@ -37,16 +37,12 @@ scoreboard.functions = function () {
         }
     };
 
-    _self.addPlayer = function () {
-
+    _self.addPlayerFromUI = function () {
         var formData = renderer.getPlayerFormData();
         if (formData.playerName != '') {
-            var result = datastore.addPlayer(formData.playerName);
+            var result = _self.addPlayer(formData.playerName);
             if (result.success) {
                 renderer.resetPlayerFormData();
-                renderer.createRemovePlayerButton(result.playerKey);
-                log.write('{player} joined this game.', {player: formData.playerName});
-                renderer.redraw();
             } else {
                 renderer.showExistingPlayerFormError();
             }
@@ -62,6 +58,7 @@ scoreboard.functions = function () {
         } else {
             log.write('Error when registering {player}', {player: name});
         }
+        return result;
     },
 
     _self.addCommander = function () {
