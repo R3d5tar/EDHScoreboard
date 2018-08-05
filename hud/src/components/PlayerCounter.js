@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {CachedCounter} from './Counter';
+import { CachedCounter } from './CachedCounter';
 import PropTypes from 'prop-types';
 
 export class PlayerCounter extends Component {

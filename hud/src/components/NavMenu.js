@@ -24,22 +24,10 @@ export class NavMenu extends Component {
                 Home
               </NavItem>
             </LinkContainer>
-            <LinkContainer to={'/life'}>
-              <NavItem>
-                <Glyphicon glyph='tree-deciduous'/>
-                Life
-              </NavItem>
-            </LinkContainer>
             <LinkContainer to={'/player/me'}>
               <NavItem>
                 <Glyphicon glyph='user'/>
                 Me
-              </NavItem>
-            </LinkContainer>
-            <LinkContainer to={'/fetchdata'}>
-              <NavItem>
-                <Glyphicon glyph='th-list'/>
-                Fetch data
               </NavItem>
             </LinkContainer>
           </Nav>

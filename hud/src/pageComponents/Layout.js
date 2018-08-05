@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Col, Grid, Row } from 'react-bootstrap';
-import { NavMenu } from './NavMenu';
+import React, {Component} from 'react';
+import {Grid, Row, Col} from 'react-bootstrap';
+import {PropTypes} from 'prop-types';
+import {NavMenu} from '../components/NavMenu';
 
 export class Layout extends Component {
   displayName = Layout.name;
@@ -11,7 +11,7 @@ export class Layout extends Component {
       <Grid fluid>
         <Row>
           <Col sm={3}>
-            <NavMenu />
+            <NavMenu/>
           </Col>
           <Col sm={9}>
             {this.props.children}

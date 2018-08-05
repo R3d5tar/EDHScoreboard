@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import MessageHubManager from './MessageHubManager';
+import MessageHubManager from '../components/MessageHubManager';
 
 export class Home extends Component {
   displayName = Home.name
